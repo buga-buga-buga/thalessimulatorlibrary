@@ -23,10 +23,10 @@ Partial Class frmAbout
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmAbout))
-        Me.PictureBox1 = New System.Windows.Forms.PictureBox
-        Me.Label2 = New System.Windows.Forms.Label
-        Me.lnk = New System.Windows.Forms.LinkLabel
-        Me.Button1 = New System.Windows.Forms.Button
+        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.lnk = New System.Windows.Forms.LinkLabel()
+        Me.Button1 = New System.Windows.Forms.Button()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -44,7 +44,7 @@ Partial Class frmAbout
         Me.Label2.AutoSize = True
         Me.Label2.Location = New System.Drawing.Point(176, 46)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(71, 13)
+        Me.Label2.Size = New System.Drawing.Size(107, 21)
         Me.Label2.TabIndex = 2
         Me.Label2.Text = "Version 0.9.6"
         '
@@ -71,9 +71,9 @@ Partial Class frmAbout
         '
         'frmAbout
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(9.0!, 21.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(288, 128)
+        Me.ClientSize = New System.Drawing.Size(368, 145)
         Me.Controls.Add(Me.Button1)
         Me.Controls.Add(Me.lnk)
         Me.Controls.Add(Me.Label2)

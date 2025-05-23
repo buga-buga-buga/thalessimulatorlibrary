@@ -14,6 +14,7 @@
  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+using log4net.Repository.Hierarchy;
 using System;
 using ThalesSim.Core.Utility;
 
@@ -97,6 +98,7 @@ namespace ThalesSim.Core.Message
             for (var i = _data.Length-1; i >= 0; i-=1)
             {
                 if (_data[i] == 0x19)
+
                 {
                     var trailer = GetRemainingBytes(i);
 

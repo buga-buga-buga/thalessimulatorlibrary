@@ -54,7 +54,7 @@ Namespace HostCommands.BuildIn
                 _clearPIN = kvp.Item("PIN")
                 _acctNbr = kvp.Item("Account Number")
 
-                'As per http://thalessim.codeplex.com/Thread/View.aspx?ThreadId=239725
+                'As per https://codeplexarchive.org/codeplex/projecttab/discussions/thalessim/239725
                 'we want to accomodate clear PINs with an F.
                 If _clearPIN.IndexOf("F") > 0 Then
                     Dim newPin As String = _clearPIN.Replace("F", "")

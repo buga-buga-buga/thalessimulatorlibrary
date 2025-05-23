@@ -54,7 +54,7 @@ Namespace ConsoleCommands
             Dim keyType As String = m_inStack.PopFromStack.ConsoleMessage
             Dim keyLen As String
             ''
-            '' Bug (see item http://thalessim.codeplex.com/Thread/View.aspx?ThreadId=154290).
+            '' Bug (see item https://codeplexarchive.org/codeplex/projecttab/discussions/thalessim/154290).
             '' ValidateKeySchemeAndLength expects 1, 2, 3 instead of 0, 1, 2.
             ''
             'Select Case clearComponent.Length

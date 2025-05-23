@@ -14,6 +14,102 @@
 '' Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 '' 
 
+'===============================================================================
+' Thales Error Codes Reference (payShield 9000 Host Command Reference Manual)
+'===============================================================================
+'Code  Description
+'----  ------------------------------------------------------------------------
+'00    No error
+'01    Verification failure or warning of imported key parity error
+'02    Key inappropriate length for algorithm
+'04    Invalid key type code
+'05    Invalid key length flag
+'10    Source key parity error
+'11    Destination key parity error or key all zeros
+'12    Contents of user storage not available. Reset, power-down or overwrite
+'13    Invalid LMK Identifier
+'14    PIN encrypted under LMK pair 02-03 is invalid
+'15    Invalid input data (invalid format, invalid characters, or not enough data provided)
+'16    Console or printer not ready or not connected
+'17    HSM not authorized, or operation prohibited by security settings
+'18    Document format definition not loaded
+'19    Specified Diebold Table is invalid
+'20    PIN block does not contain valid values
+'21    Invalid index value, or index/block count would cause an overflow condition
+'22    Invalid account number
+'23    Invalid PIN block format code (PCI HSM limitation or disallowed format)
+'24    PIN is fewer than 4 or more than 12 digits in length
+'25    Decimalization Table error
+'26    Invalid key scheme
+'27    Incompatible key length
+'28    Invalid key type
+'29    Key function not permitted
+'30    Invalid reference number
+'31    Insufficient solicitation entries for batch
+'32    LIC007 (AES) not installed
+'33    LMK key change storage is corrupted
+'39    Fraud detection
+'40    Invalid checksum
+'41    Internal hardware/software error: bad RAM, invalid error codes, etc.
+'42    DES failure
+'43    RSA Key Generation Failure
+'46    Invalid tag for encrypted PIN
+'47    Algorithm not licensed
+'49    Private key error, report to supervisor
+'51    Invalid message header
+'65    Transaction Key Scheme set to None
+'67    Command not licensed
+'68    Command has been disabled
+'69    PIN block format has been disabled
+'74    Invalid digest info syntax (no hash mode only)
+'75    Single length key masquerading as double or triple length key
+'76    RSA public key length error or RSA encrypted data length error
+'77    Clear data block error
+'78    Private key length error
+'79    Hash algorithm object identifier error
+'80    Data length error. The amount of MAC data (or other data) is greater than or less than the expected amount.
+'81    Invalid certificate header
+'82    Invalid check value length
+'83    Key block format error
+'84    Key block check value error
+'85    Invalid OAEP Mask Generation Function
+'86    Invalid OAEP MGF Hash Function
+'87    OAEP Parameter Error
+'90    Data parity error in the request message received by the HSM
+'91    Longitudinal Redundancy Check (LRC) character does not match the value computed over the input data
+'92    The Count value is not between limits, or is not correct
+'A1    Incompatible LMK schemes
+'A2    Incompatible LMK identifiers
+'A3    Incompatible key block LMK identifiers
+'A4    Key block authentication failure
+'A5    Incompatible key length
+'A6    Invalid key usage
+'A7    Invalid algorithm
+'A8    Invalid mode of use
+'A9    Invalid key version number
+'AA    Invalid export field
+'AB    Invalid number of optional blocks
+'AC    Optional header block error
+'AD    Key status optional block error
+'AE    Invalid start date/time
+'AF    Invalid end date/time
+'B0    Invalid encryption mode
+'B1    Invalid authentication mode
+'B2    Miscellaneous key block error
+'B3    Invalid number of optional blocks
+'B4    Optional block data error
+'B5    Incompatible components
+'B6    Incompatible key status optional blocks
+'B7    Invalid change field
+'B8    Invalid old value
+'B9    Invalid new value
+'BA    No key status block in the key block
+'BB    Invalid wrapping key
+'BC    Repeated optional block
+'BD    Incompatible key types
+'BE    Invalid key block header ID
+'===============================================================================
+
 ''' <summary>
 ''' This class abstracts the Racal returned error codes.
 ''' </summary>
@@ -334,45 +430,357 @@ Public Class ErrorCodes
     ''' </remarks>
     Public Const ER_ZZ_UNKNOWN_ERROR As String = "ZZ"
 
-    Private Shared _errors() As ThalesError = {New ThalesError("00", "No error"), _
-                                               New ThalesError("01", "Verification failure"), _
-                                               New ThalesError("02", "Inappropriate key length for algorithm"), _
-                                               New ThalesError("03", "Invalid number of components"), _
-                                               New ThalesError("04", "Invalid key type code"), _
-                                               New ThalesError("05", "Invalid key length flag"), _
-                                               New ThalesError("10", "Source key parity error"), _
-                                               New ThalesError("11", "Destination key parity error"), _
-                                               New ThalesError("12", "Contents of user storage not available"), _
-                                               New ThalesError("13", "Master key parity error"), _
-                                               New ThalesError("14", "PIN encrypted under LMK pair 02-03 is invalid"), _
-                                               New ThalesError("15", "Invalid input data"), _
-                                               New ThalesError("16", "Console or printer not ready/not connected"), _
-                                               New ThalesError("17", "HSM is not in the authorized state"), _
-                                               New ThalesError("18", "Document definition not loaded"), _
-                                               New ThalesError("19", "Specified Diebold table is invalid"), _
-                                               New ThalesError("20", "PIN block does not contain valid values"), _
-                                               New ThalesError("21", "Invalid index value"), _
-                                               New ThalesError("22", "Invalid account number"), _
-                                               New ThalesError("23", "Invalid PIN block format code"), _
-                                               New ThalesError("24", "PIN is fewer than 4 or more than 12 digits long"), _
-                                               New ThalesError("25", "Decimalization table error"), _
-                                               New ThalesError("26", "Invalid key scheme"), _
-                                               New ThalesError("27", "Incompatible key length"), _
-                                               New ThalesError("28", "Invalid key type"), _
-                                               New ThalesError("29", "Function not permitted"), _
-                                               New ThalesError("30", "Invalid reference number"), _
-                                               New ThalesError("31", "Insuficcient solicitation entries for batch"), _
-                                               New ThalesError("33", "LMK key change storage is corrupted"), _
-                                               New ThalesError("40", "Invalid firmware checksum"), _
-                                               New ThalesError("41", "Internal hardware/software error"), _
-                                               New ThalesError("42", "DES failure"), _
-                                               New ThalesError("51", "Invalid message header"), _
-                                               New ThalesError("52", "Invalid number of command fields"), _
-                                               New ThalesError("80", "Data length error"), _
-                                               New ThalesError("90", "Data parity error"), _
-                                               New ThalesError("91", "LRC error"), _
-                                               New ThalesError("92", "Count value not between limits"), _
-                                               New ThalesError("ZZ", "UNKNOWN ERROR")}
+    ''' <summary>
+    ''' LIC007 (AES) not installed.
+    ''' </summary>
+    Public Const ER_32_LIC007_AES_NOT_INSTALLED As String = "32"
+
+    ''' <summary>
+    ''' Fraud detection.
+    ''' </summary>
+    Public Const ER_39_FRAUD_DETECTION As String = "39"
+
+    ''' <summary>
+    ''' RSA Key Generation Failure.
+    ''' </summary>
+    Public Const ER_43_RSA_KEY_GENERATION_FAILURE As String = "43"
+
+    ''' <summary>
+    ''' Invalid tag for encrypted PIN.
+    ''' </summary>
+    Public Const ER_46_INVALID_TAG_FOR_ENCRYPTED_PIN As String = "46"
+
+    ''' <summary>
+    ''' Algorithm not licensed.
+    ''' </summary>
+    Public Const ER_47_ALGORITHM_NOT_LICENSED As String = "47"
+
+    ''' <summary>
+    ''' Private key error, report to supervisor.
+    ''' </summary>
+    Public Const ER_49_PRIVATE_KEY_ERROR As String = "49"
+
+    ''' <summary>
+    ''' Command not licensed.
+    ''' </summary>
+    Public Const ER_67_COMMAND_NOT_LICENSED As String = "67"
+
+    ''' <summary>
+    ''' Command has been disabled.
+    ''' </summary>
+    Public Const ER_68_COMMAND_DISABLED As String = "68"
+
+    ''' <summary>
+    ''' PIN block format has been disabled.
+    ''' </summary>
+    Public Const ER_69_PIN_BLOCK_FORMAT_DISABLED As String = "69"
+
+    ''' <summary>
+    ''' Invalid digest info syntax (no hash mode only).
+    ''' </summary>
+    Public Const ER_74_INVALID_DIGEST_INFO_SYNTAX As String = "74"
+
+    ''' <summary>
+    ''' Single length key masquerading as double or triple length key.
+    ''' </summary>
+    Public Const ER_75_SINGLE_LENGTH_KEY_MASQUERADING As String = "75"
+
+    ''' <summary>
+    ''' RSA public key length error or RSA encrypted data length error.
+    ''' </summary>
+    Public Const ER_76_RSA_KEY_LENGTH_ERROR As String = "76"
+
+    ''' <summary>
+    ''' Clear data block error.
+    ''' </summary>
+    Public Const ER_77_CLEAR_DATA_BLOCK_ERROR As String = "77"
+
+    ''' <summary>
+    ''' Private key length error.
+    ''' </summary>
+    Public Const ER_78_PRIVATE_KEY_LENGTH_ERROR As String = "78"
+
+    ''' <summary>
+    ''' Hash algorithm object identifier error.
+    ''' </summary>
+    Public Const ER_79_HASH_ALGORITHM_OID_ERROR As String = "79"
+
+    ''' <summary>
+    ''' Invalid certificate header.
+    ''' </summary>
+    Public Const ER_81_INVALID_CERTIFICATE_HEADER As String = "81"
+
+    ''' <summary>
+    ''' Invalid check value length.
+    ''' </summary>
+    Public Const ER_82_INVALID_CHECK_VALUE_LENGTH As String = "82"
+
+    ''' <summary>
+    ''' Key block format error.
+    ''' </summary>
+    Public Const ER_83_KEY_BLOCK_FORMAT_ERROR As String = "83"
+
+    ''' <summary>
+    ''' Key block check value error.
+    ''' </summary>
+    Public Const ER_84_KEY_BLOCK_CHECK_VALUE_ERROR As String = "84"
+
+    ''' <summary>
+    ''' Invalid OAEP Mask Generation Function.
+    ''' </summary>
+    Public Const ER_85_INVALID_OAEP_MGF As String = "85"
+
+    ''' <summary>
+    ''' Invalid OAEP MGF Hash Function.
+    ''' </summary>
+    Public Const ER_86_INVALID_OAEP_MGF_HASH_FUNCTION As String = "86"
+
+    ''' <summary>
+    ''' OAEP Parameter Error.
+    ''' </summary>
+    Public Const ER_87_OAEP_PARAMETER_ERROR As String = "87"
+
+    ''' <summary>
+    ''' Incompatible LMK schemes.
+    ''' </summary>
+    Public Const ER_A1_INCOMPATIBLE_LMK_SCHEMES As String = "A1"
+
+    ''' <summary>
+    ''' Incompatible LMK identifiers.
+    ''' </summary>
+    Public Const ER_A2_INCOMPATIBLE_LMK_IDENTIFIERS As String = "A2"
+
+    ''' <summary>
+    ''' Incompatible key block LMK identifiers.
+    ''' </summary>
+    Public Const ER_A3_INCOMPATIBLE_KEY_BLOCK_LMK_IDENTIFIERS As String = "A3"
+
+    ''' <summary>
+    ''' Key block authentication failure.
+    ''' </summary>
+    Public Const ER_A4_KEY_BLOCK_AUTHENTICATION_FAILURE As String = "A4"
+
+    ''' <summary>
+    ''' Incompatible key length.
+    ''' </summary>
+    Public Const ER_A5_INCOMPATIBLE_KEY_LENGTH As String = "A5"
+
+    ''' <summary>
+    ''' Invalid key usage.
+    ''' </summary>
+    Public Const ER_A6_INVALID_KEY_USAGE As String = "A6"
+
+    ''' <summary>
+    ''' Invalid algorithm.
+    ''' </summary>
+    Public Const ER_A7_INVALID_ALGORITHM As String = "A7"
+
+    ''' <summary>
+    ''' Invalid mode of use.
+    ''' </summary>
+    Public Const ER_A8_INVALID_MODE_OF_USE As String = "A8"
+
+    ''' <summary>
+    ''' Invalid key version number.
+    ''' </summary>
+    Public Const ER_A9_INVALID_KEY_VERSION_NUMBER As String = "A9"
+
+    ''' <summary>
+    ''' Invalid export field.
+    ''' </summary>
+    Public Const ER_AA_INVALID_EXPORT_FIELD As String = "AA"
+
+    ''' <summary>
+    ''' Invalid number of optional blocks.
+    ''' </summary>
+    Public Const ER_AB_INVALID_NUMBER_OF_OPTIONAL_BLOCKS As String = "AB"
+
+    ''' <summary>
+    ''' Optional header block error.
+    ''' </summary>
+    Public Const ER_AC_OPTIONAL_HEADER_BLOCK_ERROR As String = "AC"
+
+    ''' <summary>
+    ''' Key status optional block error.
+    ''' </summary>
+    Public Const ER_AD_KEY_STATUS_OPTIONAL_BLOCK_ERROR As String = "AD"
+
+    ''' <summary>
+    ''' Invalid start date/time.
+    ''' </summary>
+    Public Const ER_AE_INVALID_START_DATE_TIME As String = "AE"
+
+    ''' <summary>
+    ''' Invalid end date/time.
+    ''' </summary>
+    Public Const ER_AF_INVALID_END_DATE_TIME As String = "AF"
+
+    ''' <summary>
+    ''' Invalid encryption mode.
+    ''' </summary>
+    Public Const ER_B0_INVALID_ENCRYPTION_MODE As String = "B0"
+
+    ''' <summary>
+    ''' Invalid authentication mode.
+    ''' </summary>
+    Public Const ER_B1_INVALID_AUTHENTICATION_MODE As String = "B1"
+
+    ''' <summary>
+    ''' Miscellaneous key block error.
+    ''' </summary>
+    Public Const ER_B2_MISCELLANEOUS_KEY_BLOCK_ERROR As String = "B2"
+
+    ''' <summary>
+    ''' Invalid number of optional blocks.
+    ''' </summary>
+    Public Const ER_B3_INVALID_NUMBER_OF_OPTIONAL_BLOCKS As String = "B3"
+
+    ''' <summary>
+    ''' Optional block data error.
+    ''' </summary>
+    Public Const ER_B4_OPTIONAL_BLOCK_DATA_ERROR As String = "B4"
+
+    ''' <summary>
+    ''' Incompatible components.
+    ''' </summary>
+    Public Const ER_B5_INCOMPATIBLE_COMPONENTS As String = "B5"
+
+    ''' <summary>
+    ''' Incompatible key status optional blocks.
+    ''' </summary>
+    Public Const ER_B6_INCOMPATIBLE_KEY_STATUS_OPTIONAL_BLOCKS As String = "B6"
+
+    ''' <summary>
+    ''' Invalid change field.
+    ''' </summary>
+    Public Const ER_B7_INVALID_CHANGE_FIELD As String = "B7"
+
+    ''' <summary>
+    ''' Invalid old value.
+    ''' </summary>
+    Public Const ER_B8_INVALID_OLD_VALUE As String = "B8"
+
+    ''' <summary>
+    ''' Invalid new value.
+    ''' </summary>
+    Public Const ER_B9_INVALID_NEW_VALUE As String = "B9"
+
+    ''' <summary>
+    ''' No key status block in the key block.
+    ''' </summary>
+    Public Const ER_BA_NO_KEY_STATUS_BLOCK As String = "BA"
+
+    ''' <summary>
+    ''' Invalid wrapping key.
+    ''' </summary>
+    Public Const ER_BB_INVALID_WRAPPING_KEY As String = "BB"
+
+    ''' <summary>
+    ''' Repeated optional block.
+    ''' </summary>
+    Public Const ER_BC_REPEATED_OPTIONAL_BLOCK As String = "BC"
+
+    ''' <summary>
+    ''' Incompatible key types.
+    ''' </summary>
+    Public Const ER_BD_INCOMPATIBLE_KEY_TYPES As String = "BD"
+
+    ''' <summary>
+    ''' Invalid key block header ID.
+    ''' </summary>
+    Public Const ER_BE_INVALID_KEY_BLOCK_HEADER_ID As String = "BE"
+
+    Private Shared _errors() As ThalesError = {New ThalesError("00", "No error"),
+                                               New ThalesError("01", "Verification failure"),
+                                               New ThalesError("02", "Inappropriate key length for algorithm"),
+                                               New ThalesError("03", "Invalid number of components"),
+                                               New ThalesError("04", "Invalid key type code"),
+                                               New ThalesError("05", "Invalid key length flag"),
+                                               New ThalesError("10", "Source key parity error"),
+                                               New ThalesError("11", "Destination key parity error"),
+                                               New ThalesError("12", "Contents of user storage not available"),
+                                               New ThalesError("13", "Master key parity error"),
+                                               New ThalesError("14", "PIN encrypted under LMK pair 02-03 is invalid"),
+                                               New ThalesError("15", "Invalid input data"),
+                                               New ThalesError("16", "Console or printer not ready/not connected"),
+                                               New ThalesError("17", "HSM is not in the authorized state"),
+                                               New ThalesError("18", "Document definition not loaded"),
+                                               New ThalesError("19", "Specified Diebold table is invalid"),
+                                               New ThalesError("20", "PIN block does not contain valid values"),
+                                               New ThalesError("21", "Invalid index value"),
+                                               New ThalesError("22", "Invalid account number"),
+                                               New ThalesError("23", "Invalid PIN block format code"),
+                                               New ThalesError("24", "PIN is fewer than 4 or more than 12 digits long"),
+                                               New ThalesError("25", "Decimalization table error"),
+                                               New ThalesError("26", "Invalid key scheme"),
+                                               New ThalesError("27", "Incompatible key length"),
+                                               New ThalesError("28", "Invalid key type"),
+                                               New ThalesError("29", "Function not permitted"),
+                                               New ThalesError("30", "Invalid reference number"),
+                                               New ThalesError("31", "Insuficcient solicitation entries for batch"),
+                                               New ThalesError("33", "LMK key change storage is corrupted"),
+                                               New ThalesError("40", "Invalid firmware checksum"),
+                                               New ThalesError("41", "Internal hardware/software error"),
+                                               New ThalesError("42", "DES failure"),
+                                               New ThalesError("51", "Invalid message header"),
+                                               New ThalesError("52", "Invalid number of command fields"),
+                                               New ThalesError("80", "Data length error"),
+                                               New ThalesError("90", "Data parity error"),
+                                               New ThalesError("91", "LRC error"),
+                                               New ThalesError("92", "Count value not between limits"),
+                                               New ThalesError("ZZ", "UNKNOWN ERROR"),
+                                               New ThalesError("32", "LIC007 (AES) not installed"),
+                                               New ThalesError("39", "Fraud detection"),
+                                               New ThalesError("43", "RSA Key Generation Failure"),
+                                               New ThalesError("46", "Invalid tag for encrypted PIN"),
+                                               New ThalesError("47", "Algorithm not licensed"),
+                                               New ThalesError("49", "Private key error, report to supervisor"),
+                                               New ThalesError("67", "Command not licensed"),
+                                               New ThalesError("68", "Command has been disabled"),
+                                               New ThalesError("69", "PIN block format has been disabled"),
+                                               New ThalesError("74", "Invalid digest info syntax (no hash mode only)"),
+                                               New ThalesError("75", "Single length key masquerading as double or triple length key"),
+                                               New ThalesError("76", "RSA public key length error or RSA encrypted data length error"),
+                                               New ThalesError("77", "Clear data block error"),
+                                               New ThalesError("78", "Private key length error"),
+                                               New ThalesError("79", "Hash algorithm object identifier error"),
+                                               New ThalesError("81", "Invalid certificate header"),
+                                               New ThalesError("82", "Invalid check value length"),
+                                               New ThalesError("83", "Key block format error"),
+                                               New ThalesError("84", "Key block check value error"),
+                                               New ThalesError("85", "Invalid OAEP Mask Generation Function"),
+                                               New ThalesError("86", "Invalid OAEP MGF Hash Function"),
+                                               New ThalesError("87", "OAEP Parameter Error"),
+                                               New ThalesError("A1", "Incompatible LMK schemes"),
+                                               New ThalesError("A2", "Incompatible LMK identifiers"),
+                                               New ThalesError("A3", "Incompatible key block LMK identifiers"),
+                                               New ThalesError("A4", "Key block authentication failure"),
+                                               New ThalesError("A5", "Incompatible key length"),
+                                               New ThalesError("A6", "Invalid key usage"),
+                                               New ThalesError("A7", "Invalid algorithm"),
+                                               New ThalesError("A8", "Invalid mode of use"),
+                                               New ThalesError("A9", "Invalid key version number"),
+                                               New ThalesError("AA", "Invalid export field"),
+                                               New ThalesError("AB", "Invalid number of optional blocks"),
+                                               New ThalesError("AC", "Optional header block error"),
+                                               New ThalesError("AD", "Key status optional block error"),
+                                               New ThalesError("AE", "Invalid start date/time"),
+                                               New ThalesError("AF", "Invalid end date/time"),
+                                               New ThalesError("B0", "Invalid encryption mode"),
+                                               New ThalesError("B1", "Invalid authentication mode"),
+                                               New ThalesError("B2", "Miscellaneous key block error"),
+                                               New ThalesError("B3", "Invalid number of optional blocks"),
+                                               New ThalesError("B4", "Optional block data error"),
+                                               New ThalesError("B5", "Incompatible components"),
+                                               New ThalesError("B6", "Incompatible key status optional blocks"),
+                                               New ThalesError("B7", "Invalid change field"),
+                                               New ThalesError("B8", "Invalid old value"),
+                                               New ThalesError("B9", "Invalid new value"),
+                                               New ThalesError("BA", "No key status block in the key block"),
+                                               New ThalesError("BB", "Invalid wrapping key"),
+                                               New ThalesError("BC", "Repeated optional block"),
+                                               New ThalesError("BD", "Incompatible key types"),
+                                               New ThalesError("BE", "Invalid key block header ID")}
 
     ''' <summary>
     ''' Returns error help.

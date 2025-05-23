@@ -80,7 +80,7 @@ Namespace HostCommands.BuildIn
                 If ValidateKeySchemeCode(_keySchemeLMK, ks, mr) = False Then Return mr
                 If ValidateKeySchemeCode(_keySchemeZMK, zmkKs, mr) = False Then Return mr
 
-                '' Per http://thalessim.codeplex.com/discussions/407151, we also process
+                '' Per https://codeplexarchive.org/codeplex/projecttab/discussions/thalessim/407151, we also process
                 '' triple-length keys.
                 'If ks = KeySchemeTable.KeyScheme.TripleLengthKeyAnsi OrElse _
                 '   ks = KeySchemeTable.KeyScheme.TripleLengthKeyVariant Then

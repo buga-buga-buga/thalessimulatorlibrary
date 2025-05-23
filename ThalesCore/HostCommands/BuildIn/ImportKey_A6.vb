@@ -99,7 +99,7 @@ Namespace HostCommands.BuildIn
             End If
 
             'Changed to use the DecryptUnderZMK method instead of directly performing 3DES decrypt.
-            'See http://thalessim.codeplex.com/Thread/View.aspx?ThreadId=217215.
+            'See https://codeplexarchive.org/codeplex/projecttab/discussions/thalessim/217215.
             Dim clearKey As String = DecryptUnderZMK(clearZMK, Utility.RemoveKeyType(_key), _targetKeyScheme, _atallaVariant)
             If Utility.IsParityOK(clearKey, Utility.ParityCheck.OddParity) = False Then
                 _warnParity = True

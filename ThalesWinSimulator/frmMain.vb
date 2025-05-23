@@ -20,17 +20,34 @@ Public Class frmMain
 
     Delegate Sub UpdateTextBox(ByVal s As String)
 
-    Dim WithEvents o As ThalesSim.Core.ThalesMain
+    Dim o As ThalesSim.Core.ThalesMain
 
     Private Sub cmdStartSim_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmdStartSim.Click
         Try
+            ' Se já existe um objeto, remove os handlers antigos
+            If o IsNot Nothing Then
+                RemoveHandler o.DataArrived, AddressOf o_DataArrived
+                RemoveHandler o.DataSent, AddressOf o_DataSent
+                RemoveHandler o.MajorLogEvent, AddressOf o_MajorLogEvent
+                RemoveHandler o.MinorLogEvent, AddressOf o_MinorLogEvent
+                RemoveHandler o.PrinterData, AddressOf o_PrinterData
+            End If
+
             o = New ThalesMain
+
+            ' Adiciona os handlers manualmente
+            AddHandler o.DataArrived, AddressOf o_DataArrived
+            AddHandler o.DataSent, AddressOf o_DataSent
+            AddHandler o.MajorLogEvent, AddressOf o_MajorLogEvent
+            AddHandler o.MinorLogEvent, AddressOf o_MinorLogEvent
+            AddHandler o.PrinterData, AddressOf o_PrinterData
+
             o.StartUp(txtParameters.Text)
             EnDeGUI(False)
             sb.Panels(1).Text = "Running"
             UpdateAuthMode()
         Catch ex As Exception
-            o.ShutDown()
+            If o IsNot Nothing Then o.ShutDown()
             o = Nothing
             MessageBox.Show(Me, "Error during startup!" + vbCrLf + ex.ToString(), "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
@@ -64,27 +81,28 @@ Public Class frmMain
         Return ret.ToString
     End Function
 
-    Private Sub o_DataArrived(ByVal sender As Core.ThalesMain, ByVal e As Core.TCPEventArgs) Handles o.DataArrived
-        If ThalesSim.Core.Log.Logger.CurrentLogLevel >= Log.Logger.LogLevel.Info Then
-            Me.Invoke(New UpdateTextBox(AddressOf UpdateDataReceived), New String() {e.RemoteClient + vbCrLf + GetByteDisplay(e.Data) + vbCrLf})
-        End If
+    Private Sub o_DataArrived(ByVal sender As Core.ThalesMain, ByVal e As Core.TCPEventArgs)
+        Debug.WriteLine("Evento o_DataArrived chamado!")
+        '' If ThalesSim.Core.Log.Logger.CurrentLogLevel >= Log.Logger.LogLevel.Info Then
+        Me.Invoke(New UpdateTextBox(AddressOf UpdateDataReceived), New String() {e.RemoteClient + vbCrLf + GetByteDisplay(e.Data) + vbCrLf})
+        '' End If
     End Sub
 
-    Private Sub o_DataSent(ByVal sender As Core.ThalesMain, ByVal e As Core.TCPEventArgs) Handles o.DataSent
-        If ThalesSim.Core.Log.Logger.CurrentLogLevel >= Log.Logger.LogLevel.Info Then
-            Me.Invoke(New UpdateTextBox(AddressOf UpdateDataSent), New String() {e.RemoteClient + vbCrLf + GetByteDisplay(e.Data) + vbCrLf})
-        End If
+    Private Sub o_DataSent(ByVal sender As Core.ThalesMain, ByVal e As Core.TCPEventArgs)
+        ''If ThalesSim.Core.Log.Logger.CurrentLogLevel >= Log.Logger.LogLevel.Info Then
+        Me.Invoke(New UpdateTextBox(AddressOf UpdateDataSent), New String() {e.RemoteClient + vbCrLf + GetByteDisplay(e.Data) + vbCrLf})
+        '' End If
     End Sub
 
-    Private Sub o_MajorLogEvent(ByVal sender As ThalesMain, ByVal s As String) Handles o.MajorLogEvent
+    Private Sub o_MajorLogEvent(ByVal sender As ThalesMain, ByVal s As String)
         Me.Invoke(New UpdateTextBox(AddressOf UpdateMajorLogEvent), New String() {s})
     End Sub
 
-    Private Sub o_MinorLogEvent(ByVal sender As ThalesMain, ByVal s As String) Handles o.MinorLogEvent
+    Private Sub o_MinorLogEvent(ByVal sender As ThalesMain, ByVal s As String)
         Me.Invoke(New UpdateTextBox(AddressOf UpdateMinorLogEvent), New String() {s})
     End Sub
 
-    Private Sub o_PrinterData(ByVal sender As ThalesMain, ByVal s As String) Handles o.PrinterData
+    Private Sub o_PrinterData(ByVal sender As ThalesMain, ByVal s As String)
         Me.Invoke(New UpdateTextBox(AddressOf UpdatePrinterData), New String() {s})
     End Sub
 

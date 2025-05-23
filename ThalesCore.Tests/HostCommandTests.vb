@@ -147,14 +147,14 @@ Imports ThalesSim.Core.Message
         Assert.AreEqual("000406FBB23A5214DF0035BB", TestTran("0024ED06495741C280C35ED0C0EA7F7D0FAZ", New ImportKey_A6))
         Assert.AreEqual("000406FBB23A5214DF0035BB", TestTran("0024ED06495741C280CB9219C90F03A9627Z5", New ImportKey_A6))
         SwitchToDoubleLengthZMKs()
-        'Contributed by wpak, fixes issue described at http://thalessim.codeplex.com/Thread/View.aspx?ThreadId=217215.
+        'Contributed by wpak, fixes issue described at https://codeplexarchive.org/codeplex/projecttab/discussions/thalessim/217215.
         Assert.AreEqual("00U0E07CDC0161A0DE3B5AA44DF227EC9DEABDEBC", TestTran("001U71979DEB8587E2734F1E99D5DCAEF9ACU482C4E722BB0CF1845E1E5BD16310119U", New ImportKey_A6))
         Assert.AreEqual("00U1EF828AA8F6B80EB83E19FBC373F3A856F1E3F", TestTran("001U71979DEB8587E2734F1E99D5DCAEF9ACXC8E3118AFA853807EB7E92294663A5BAU", New ImportKey_A6))
         Assert.AreEqual("00U1EF828AA8F6B80EB83E19FBC373F3A856F1E3F", TestTran("001U71979DEB8587E2734F1E99D5DCAEF9ACX8E80C547F2A1324B84763B0EE32B73ADU1", New ImportKey_A6))
         Assert.AreEqual("00BAB32D775A38E4AB73936E", TestTran("001U1457FF6ADF6250C66C368416B4C9D3832B930A07119F93A8Z", New ImportKey_A6))
     End Sub
 
-    <TestMethod()> _
+    <TestMethod()>
     Public Sub TestGenerateVISAPVV()
         Assert.AreEqual("004402", TestTran("X367930344805B1FAD6146EF4ED7502B3012345500000253211", New GenerateVISAPVV_DG))
         Assert.AreEqual("004402", TestTran("367930344805B1FAD6146EF4ED7502B3012345500000253211", New GenerateVISAPVV_DG))
@@ -162,7 +162,7 @@ Imports ThalesSim.Core.Message
         Assert.AreEqual("001226", TestTran("UE9F05D2F2DB8A8579CA3E806B35E336F012341234567890120", New GenerateVISAPVV_DG))
     End Sub
 
-    <TestMethod()> _
+    <TestMethod()>
     Public Sub TestVerifyTerminalPINUsingVISAAlgorithm()
         Assert.AreEqual("00", TestTran("0406FBB23A5214DFX367930344805B1FAD6146EF4ED7502B3AE7A708F877571A90155000002532114402", New VerifyTerminalPINWithVISAAlgorithm_DC))
         Assert.AreEqual("00", TestTran("0406FBB23A5214DF367930344805B1FAD6146EF4ED7502B3AE7A708F877571A90155000002532114402", New VerifyTerminalPINWithVISAAlgorithm_DC))
@@ -171,7 +171,7 @@ Imports ThalesSim.Core.Message
         Assert.AreEqual("01", TestTran("U8463435FC4B4DAA0C49025272C29B12CX367930344805B1FAD6146EF4ED7502B3028DCC093FB0471F0355000002532114401", New VerifyTerminalPINWithVISAAlgorithm_DC))
     End Sub
 
-    <TestMethod()> _
+    <TestMethod()>
     Public Sub TestVerifyInterchangePINUsingVISAAlgorithm()
         Assert.AreEqual("00", TestTran("BAB32D775A38E4ABX367930344805B1FAD6146EF4ED7502B3F7808F2CBEC631680355000002532114402", New VerifyInterchangePINWithVISAAlgorithm_EC))
         Assert.AreEqual("01", TestTran("BAB32D775A38E4ABX367930344805B1FAD6146EF4ED7502B3F7808F2CBEC631680355000002532114401", New VerifyInterchangePINWithVISAAlgorithm_EC))
@@ -179,39 +179,39 @@ Imports ThalesSim.Core.Message
         Assert.AreEqual("01", TestTran("U1EF828AA8F6B80EB83E19FBC373F3A85X367930344805B1FAD6146EF4ED7502B391DDDA0A7C12CFAA0155000002532114401", New VerifyInterchangePINWithVISAAlgorithm_EC))
     End Sub
 
-    <TestMethod()> _
+    <TestMethod()>
     Public Sub TestTranslatePINFromVISAToThales()
         AuthorizedStateOn()
         Assert.AreEqual("00001234", TestTran("55000002532101234", New TranslatePINFromVISAToThales_BQ))
         AuthorizedStateOff()
     End Sub
 
-    <TestMethod()> _
+    <TestMethod()>
     Public Sub TestTranslatePINFromOneZPKToAnother()
         Assert.AreEqual("000482206CCD872229C203", TestTran("BAB32D775A38E4ABU1EF828AA8F6B80EB83E19FBC373F3A8512F7808F2CBEC631680303550000025321", New TranslatePINFromZPKToZPK_CC))
         Assert.AreEqual("000491DDDA0A7C12CFAA01", TestTran("BAB32D775A38E4ABU1EF828AA8F6B80EB83E19FBC373F3A8512F7808F2CBEC631680301550000025321", New TranslatePINFromZPKToZPK_CC))
     End Sub
 
-    <TestMethod()> _
+    <TestMethod()>
     Public Sub TestTranslatePINFromTPKToLMK()
         Assert.AreEqual("0001234", TestTran("U8463435FC4B4DAA0C49025272C29B12C028DCC093FB0471F03550000025321", New TranslatePINFromTPKToLMK_JC))
         Assert.AreEqual("0001234", TestTran("U8463435FC4B4DAA0C49025272C29B12C6428EB94035AF53B01550000025321", New TranslatePINFromTPKToLMK_JC))
     End Sub
 
-    <TestMethod()> _
+    <TestMethod()>
     Public Sub TestTranslatePINFromLMKToZPK()
         Assert.AreEqual("0098A841D13467F185", TestTran("TA5E7D4FE829B0D83C5E7352636C16C7827E197349E34A5CD0112345678901201234", New TranslatePINFromLMKToZPK_JG))
         Assert.AreEqual("00E98FFDA17099AF55", TestTran("BAB32D775A38E4AB0155000002532101234", New TranslatePINFromLMKToZPK_JG))
         Assert.AreEqual("00F7808F2CBEC63168", TestTran("BAB32D775A38E4AB0355000002532101234", New TranslatePINFromLMKToZPK_JG))
     End Sub
 
-    <TestMethod()> _
+    <TestMethod()>
     Public Sub TestTranslatePINFromZPKToLMK()
         Assert.AreEqual("0001234", TestTran("U1EF828AA8F6B80EB83E19FBC373F3A8591DDDA0A7C12CFAA01550000025321", New TranslatePINFromZPKToLMK_JE))
         Assert.AreEqual("0001234", TestTran("U1EF828AA8F6B80EB83E19FBC373F3A8582206CCD872229C203550000025321", New TranslatePINFromZPKToLMK_JE))
     End Sub
 
-    <TestMethod()> _
+    <TestMethod()>
     Public Sub TestTranslatePINFromTPKToZMK()
         Assert.AreEqual("0004F7808F2CBEC6316803", TestTran("0406FBB23A5214DFBAB32D775A38E4AB12DC80B186C30902B00303550000025321", New TranslatePINFromTPKToZPK_CA))
         Assert.AreEqual("0004E98FFDA17099AF5501", TestTran("0406FBB23A5214DFBAB32D775A38E4AB12DC80B186C30902B00301550000025321", New TranslatePINFromTPKToZPK_CA))
@@ -220,14 +220,14 @@ Imports ThalesSim.Core.Message
         Assert.AreEqual("000482206CCD872229C203", TestTran("U8463435FC4B4DAA0C49025272C29B12CU1EF828AA8F6B80EB83E19FBC373F3A85126428EB94035AF53B0103550000025321", New TranslatePINFromTPKToZPK_CA))
     End Sub
 
-    <TestMethod()> _
+    <TestMethod()>
     Public Sub TestTranslateKeyScheme()
         AuthorizedStateOn()
         Assert.AreEqual("00XDA05B7A979CBD9A1DA05B7A979CBD9A1", TestTran("000U42BBE7D9A0A55D0EAA54C982B4D06B70X", New TranslateKeyScheme_B0))
         AuthorizedStateOff()
     End Sub
 
-    <TestMethod()> _
+    <TestMethod()>
     Public Sub TestFormZMKFromTwoToNineComponents()
         AuthorizedStateOn()
         Assert.AreEqual("00C0BC1DFFC449A402DAB71250CA5869CC8CE39643DA9A9B99", TestTran("32EC8A0412B5D0E86E3C1E5ABFA19B3F5FF43378ED5D85B1BC465BF000335FBF1A235EDF4C58A2CB0C84641D07319CF21", New FormZMKFromTwoToNineComponents_GY))
@@ -247,7 +247,7 @@ Imports ThalesSim.Core.Message
         AuthorizedStateOff()
     End Sub
 
-    <TestMethod()> _
+    <TestMethod()>
     Public Sub TestTranslateZMKFromZMKToLMK()
         AuthorizedStateOn()
         Assert.AreEqual("00UF673F2E0149686A7365E73B881152B9713F44F34A77D8263", TestTran("2EC8A0412B5D0E86E3C1E5ABFA19B3F579E1B5D8DC672AF00137070260B5FA8E;XU0", New TranslateZMKFromZMKToLMK_BY))
@@ -256,13 +256,13 @@ Imports ThalesSim.Core.Message
         AuthorizedStateOff()
     End Sub
 
-    <TestMethod()> _
+    <TestMethod()>
     Public Sub TestTranslateZPKFromZMKToLMK()
         Assert.AreEqual("00BAB32D775A38E4AB73936E441E46819D", TestTran("U1457FF6ADF6250C66C368416B4C9D3832B930A07119F93A8", New TranslateZPKFromZMKToLMK_FA))
         Assert.AreEqual("00BAB32D775A38E4AB73936E", TestTran("U1457FF6ADF6250C66C368416B4C9D3832B930A07119F93A8;XZ1", New TranslateZPKFromZMKToLMK_FA))
     End Sub
 
-    <TestMethod()> _
+    <TestMethod()>
     Public Sub TestTranslateZPKFromLMKToZMK()
         SwitchToSingleLengthZMKs()
         Assert.AreEqual("002B930A07119F93A873936E441E46819D", TestTran("U1457FF6ADF6250C66C368416B4C9D383BAB32D775A38E4AB", New TranslateZPKFromLMKToZMK_GC))
@@ -270,7 +270,7 @@ Imports ThalesSim.Core.Message
         SwitchToDoubleLengthZMKs()
     End Sub
 
-    <TestMethod()> _
+    <TestMethod()>
     Public Sub TestTranslateTMKFromLMKToTMK()
         Assert.AreEqual("00A341A0CC5F71B229", TestTran("7BB126F2BE6314860406FBB23A5214DF", New TranslateTMKTPKPVKFromLMKToTMKTPKPVK_AE))
         'This test case seems incorrect. Variant is specified as the key, so it should be also used in the output.
@@ -279,7 +279,7 @@ Imports ThalesSim.Core.Message
         Assert.AreEqual("00508949F68B4060A4", TestTran("U8463435FC4B4DAA0C49025272C29B12C0406FBB23A5214DF", New TranslateTMKTPKPVKFromLMKToTMKTPKPVK_AE))
     End Sub
 
-    <TestMethod()> _
+    <TestMethod()>
     Public Sub TestTranslateTMKFromZMKToLMK()
         SwitchToSingleLengthZMKs()
         Assert.AreEqual("000406FBB23A5214DF0035BBE340A4B763", TestTran("4ED06495741C280C35ED0C0EA7F7D0FA", New TranslateTMPTPKPVKFromZMKToLMK_FC))
@@ -289,7 +289,7 @@ Imports ThalesSim.Core.Message
         Assert.AreEqual("00U8463435FC4B4DAA0C49025272C29B12C070753", TestTran("U1457FF6ADF6250C66C368416B4C9D383XF7D53991678347EFB3026882F724E6EE;XU1", New TranslateTMPTPKPVKFromZMKToLMK_FC))
     End Sub
 
-    <TestMethod()> _
+    <TestMethod()>
     Public Sub TestTranslateTMKFromLMKToZMK()
         AuthorizedStateOn()
         SwitchToSingleLengthZMKs()
@@ -300,35 +300,35 @@ Imports ThalesSim.Core.Message
         AuthorizedStateOff()
     End Sub
 
-    <TestMethod()> _
+    <TestMethod()>
     Public Sub TestTranslateTAKFromZMKToLMK()
         SwitchToSingleLengthZMKs()
         Assert.AreEqual("00C6F34693FB39CB6EEDFE6926B3B9D27C", TestTran("4ED06495741C280CE6CF9DB3EC5D766F", New TranslateTAKFromZMKToLMK_MI))
         SwitchToDoubleLengthZMKs()
     End Sub
 
-    <TestMethod()> _
+    <TestMethod()>
     Public Sub TestTranslateTAKFromLMKToZMK()
         SwitchToSingleLengthZMKs()
         Assert.AreEqual("00E6CF9DB3EC5D766FEDFE6926B3B9D27C", TestTran("4ED06495741C280CC6F34693FB39CB6E", New TranslateTAKFromLMKToZMK_MG))
         SwitchToDoubleLengthZMKs()
     End Sub
 
-    <TestMethod()> _
+    <TestMethod()>
     Public Sub TestTranslateTAKFromLMKToTMK()
         SwitchToSingleLengthZMKs()
         Assert.AreEqual("00D3A9103B524C49ACEDFE6926B3B9D27C", TestTran("0406FBB23A5214DFC6F34693FB39CB6E", New TranslateTAKFromLMKToTMK_AG))
         SwitchToDoubleLengthZMKs()
     End Sub
 
-    <TestMethod()> _
+    <TestMethod()>
     Public Sub TestGenerateCVV()
         Assert.AreEqual("00561", TestTran("U9B4934384B19946B040CD702B4D581454123456789012345;8701101", New GenerateVISACVV_CW))
         Assert.AreEqual("00561", TestTran("0A61E674E88C6A7EEABC38C2B2BB492F4123456789012345;8701101", New GenerateVISACVV_CW))
         Assert.AreEqual("00649", TestTran("0A61E674E88C6A7EEABC38C2B2BB492F4999988887777;9105111", New GenerateVISACVV_CW))
     End Sub
 
-    <TestMethod()> _
+    <TestMethod()>
     Public Sub TestVerifyCVV()
         Assert.AreEqual("00", TestTran("U9B4934384B19946B040CD702B4D581455614123456789012345;8701101", New VerifyVISACVV_CY))
         Assert.AreEqual("01", TestTran("U9B4934384B19946B040CD702B4D581451114123456789012345;8701101", New VerifyVISACVV_CY))
@@ -337,7 +337,7 @@ Imports ThalesSim.Core.Message
         Assert.AreEqual("01", TestTran("0A61E674E88C6A7EEABC38C2B2BB492F1114999988887777;9105111", New VerifyVISACVV_CY))
     End Sub
 
-    <TestMethod()> _
+    <TestMethod()>
     Public Sub TestTranslateCVKFromZMKToLMK()
         SwitchToSingleLengthZMKs()
         Assert.AreEqual("000A61E674E88C6A7EEABC38C2B2BB492FD5D44FA68CDC", TestTran("4ED06495741C280CAB88EE604522372FDAA27A67A8CDADFA;000", New TranslateCVKFromZMKToLMK_AW))
@@ -345,7 +345,7 @@ Imports ThalesSim.Core.Message
         SwitchToDoubleLengthZMKs()
     End Sub
 
-    <TestMethod()> _
+    <TestMethod()>
     Public Sub TranslateCVKFromLMKToZMK()
         SwitchToSingleLengthZMKs()
         Assert.AreEqual("00AB88EE604522372FDAA27A67A8CDADFAD5D44FA68CDC", TestTran("4ED06495741C280C0A61E674E88C6A7EEABC38C2B2BB492F", New TranslateCVKFromLMKToZMK_AU))
@@ -353,7 +353,7 @@ Imports ThalesSim.Core.Message
         SwitchToDoubleLengthZMKs()
     End Sub
 
-    <TestMethod()> _
+    <TestMethod()>
     Public Sub TestTranslateZEKZAKFromZMKToLMK()
         SwitchToSingleLengthZMKs()
         Assert.AreEqual("00U913248D2781448EB99849CFFE39768AD468318", TestTran("04ED06495741C280CX2C0E3EE7A5EFFA00C3CD721FE6E66B82;ZU1", New TranslateZEKORZAKFromZMKToLMK_FK))
@@ -361,7 +361,7 @@ Imports ThalesSim.Core.Message
         SwitchToDoubleLengthZMKs()
     End Sub
 
-    <TestMethod()> _
+    <TestMethod()>
     Public Sub TestTranslateZEKZAKFromLMKToZMK()
         SwitchToSingleLengthZMKs()
         'Both tests seem incorrect since variant is specified in the key.
@@ -372,38 +372,38 @@ Imports ThalesSim.Core.Message
         SwitchToDoubleLengthZMKs()
     End Sub
 
-    <TestMethod()> _
+    <TestMethod()>
     Public Sub TestGenerateMAC()
         Assert.AreEqual("00170C2BDB", TestTran("C6F34693FB39CB6E676976656D65534F4D454D4143696E67", New GenerateMAC_MA))
     End Sub
 
-    <TestMethod()> _
+    <TestMethod()>
     Public Sub TestVerifyMAC()
         Assert.AreEqual("01", TestTran("C6F34693FB39CB6E170C2BDB676976656D65534F4D454D4143696E68", New VerifyMAC_MC))
         Assert.AreEqual("00", TestTran("C6F34693FB39CB6E170C2BDB676976656D65534F4D454D4143696E67", New VerifyMAC_MC))
     End Sub
 
-    <TestMethod()> _
+    <TestMethod()>
     Public Sub TestVerifyTranslateMAC()
         Assert.AreEqual("00D7DA46FC", TestTran("C6F34693FB39CB6EE96E2363E063746F170C2BDB676976656D65534F4D454D4143696E67", New VerifyAndTranslateMAC_ME))
         Assert.AreEqual("01", TestTran("C6F34693FB39CB6EE96E2363E063746F170C2BDB676976656D65534F4D454D4143696E68", New VerifyAndTranslateMAC_ME))
     End Sub
 
-    <TestMethod()> _
+    <TestMethod()>
     Public Sub TestGenerateLargeMAC()
         Assert.AreEqual("007F805A8874D3B604", TestTran("1UE84C6E8F364BB594D2F59F6E8A6BBBF5010676976656D65534F4D454D4143696E67", New GenerateMACForLargeMessage_MQ))
         Assert.AreEqual("00832239FEDDD43CE1", TestTran("2UE84C6E8F364BB594D2F59F6E8A6BBBF57F805A8874D3B604014676976656D65534F4D454D4F52454D4143696E67", New GenerateMACForLargeMessage_MQ))
         Assert.AreEqual("00D2BF9C1E86E5BB14", TestTran("3UE84C6E8F364BB594D2F59F6E8A6BBBF5832239FEDDD43CE1014676976656D65534F4D454D4F52454D4143696E67", New GenerateMACForLargeMessage_MQ))
     End Sub
 
-    <TestMethod()> _
+    <TestMethod()>
     Public Sub TestTranslatePINFromDukptoZPK()
         Assert.AreEqual("00047D26134E85E7DADF01", TestTran("U8E3D3E2FD5919657F05A1AA90D32A014U9D961F6AF1D24B38AB37B320022FF57D605FFFF9876543210E000011B9C1845EB993A7A01401234567890", New TranslatePINFromDUKPTToZPK_CI))
         Assert.AreEqual("00047D26134E85E7DADF01", TestTran("U8E3D3E2FD5919657F05A1AA90D32A014U9D961F6AF1D24B38AB37B320022FF57D605FFFF9876543210E00010D5D9638559EF53D601401234567890", New TranslatePINFromDUKPTToZPK_CI))
         Assert.AreEqual("00047D26134E85E7DADF01", TestTran("U8E3D3E2FD5919657F05A1AA90D32A014U9D961F6AF1D24B38AB37B320022FF57D605FFFF9876543210EFFC00DEFC6F09F8927B7101401234567890", New TranslatePINFromDUKPTToZPK_CI))
     End Sub
 
-    <TestMethod()> _
+    <TestMethod()>
     Public Sub TestTranslatePINFromDukptToZPK3DES()
         Dim BDK As String = "0123456789ABCDEFFEDCBA9876543210"
         Dim PAN As String = "4012345678909"
@@ -426,17 +426,17 @@ Imports ThalesSim.Core.Message
         Assert.AreEqual("00", TestTran("U8E3D3E2FD5919657F05A1AA90D32A014U12E294DA05CE8761CC557F8D4786D21F7089A0003000002DD20000BF497689DC4224B200101000000000000", New TranslatePINFromDUKPTToZPK3DES_G0()).Substring(0, 2))
     End Sub
 
-    <TestMethod()> _
+    <TestMethod()>
     Public Sub TestValidateDukptPinWithIBMAlgorithm()
         Assert.AreEqual("00", TestTran("U8E3D3E2FD5919657F05A1AA90D32A01456C1DC7F3A899043605FFFF9876543210E000011B9C1845EB993A7A0440123456789001234567890123450004012345N99252FFFFFFFF", New VerifyDukptPINWithIBMAlgorithm_CK))
     End Sub
 
-    <TestMethod()> _
+    <TestMethod()>
     Public Sub TestValidateDukptPinWithVisaAlgorithm()
         Assert.AreEqual("00", TestTran("U8E3D3E2FD5919657F05A1AA90D32A014U9487FAD9CF6AF6E918BF06F71FED1415605FFFF9876543210E000011B9C1845EB993A7A04401234567806023", New VerifyDukptPINWithVISAAlgorithm_CM))
     End Sub
 
-    <TestMethod()> _
+    <TestMethod()>
     Public Sub TestVerifyAndGeneratePVV()
         'Successfully change PIN from 1234 to 4321 for ZPK and TPK.
         Assert.AreEqual("009614", TestTran("001U1EF828AA8F6B80EB83E19FBC373F3A85X367930344805B1FAD6146EF4ED7502B391DDDA0A7C12CFAA0155000002532114402262D1CC277EF0BB4", New VerifyAndGenerateVISAPVV_CU))
@@ -446,8 +446,8 @@ Imports ThalesSim.Core.Message
         Assert.AreEqual("01", TestTran("002U8463435FC4B4DAA0C49025272C29B12CX367930344805B1FAD6146EF4ED7502B3028DCC093FB0471F0355000002532114401DC90438F79A7A075", New VerifyAndGenerateVISAPVV_CU))
     End Sub
 
-    'Contributed by robt, http://thalessim.codeplex.com/Thread/View.aspx?ThreadId=70958
-    <TestMethod()> _
+    'Contributed by robt, https://codeplexarchive.org/codeplex/projecttab/discussions/thalessim/70958
+    <TestMethod()>
     Public Sub TestGenerateZEKAndCheckTranslation()
         AuthorizedStateOn()
         Dim ZMK As String = TestTran("0000U", New GenerateKey_A0).Substring(2, 33)
@@ -458,7 +458,7 @@ Imports ThalesSim.Core.Message
         AuthorizedStateOff()
     End Sub
 
-    <TestMethod()> _
+    <TestMethod()>
     Public Sub TestVerifyDynamicCVV()
         ''PM12U2E774AEF908AFBA19D44D4A29AD7BD61A5338830099990279;010385338830099990279D14052216323014001072F001122330011200000
         'Dim resss As String = TestTran("12U2E774AEF908AFBA19D44D4A29AD7BD61A5338830099990279;01019" + CreateBytesWithData("5338830099990279D14052216323014001072F") + "001122330011200000", New VerifyDynamicCVV_PM())
@@ -475,7 +475,7 @@ Imports ThalesSim.Core.Message
         Assert.AreEqual("01", TestTran("12U1E6F5623CAEF7F791373A1F01A506A28A5413123556784801;00019" + "5413123556784801D09061019005997722253F" + "0000077200028XX000", New VerifyDynamicCVV_PM))
     End Sub
 
-    <TestMethod()> _
+    <TestMethod()>
     Public Sub TestHashDataBlock()
         'Test hashes from Wikipedia.
         TestHash("01", "The quick brown fox jumps over the lazy dog", "2fd4e1c67a2d28fced849ee1bb76e7391b93eb12".ToUpper)
@@ -501,7 +501,7 @@ Imports ThalesSim.Core.Message
         End If
     End Sub
 
-    <TestMethod()> _
+    <TestMethod()>
     Public Sub TestEchoCommand()
         'Correct - No Data
         Assert.AreEqual("00", TestTran("0000", New EchoTest_B2))
@@ -513,7 +513,7 @@ Imports ThalesSim.Core.Message
         Assert.AreEqual("15", TestTran("00090123456789ABCDEF", New EchoTest_B2))
     End Sub
 
-    <TestMethod()> _
+    <TestMethod()>
     Public Sub TestCommandChainingBasic()
         'Correct case (without headers)
         Assert.AreEqual("00020004BF010004CZ00", TestTran("0020070BEUB13875901A7ECEDF1DBD06A5C0AED0FBBF0514F7D6A62A4401020000054301785040061CYB62C0A61BEAB9D15A31A02F7CCBCC8291713500200000543012;0413526", New CommandChaining_NK))
@@ -529,7 +529,7 @@ Imports ThalesSim.Core.Message
         'Assert.AreEqual("00020008BEUB14670008CYB62D67", TestTran("1020070BEUB13875901A7ECEDF1DBD06A5C0AED0FBBF0514F7D6A62A4401020000054301785040061CYB62C0A61BEAB9D15A31A02F7CCBCC8291713500200000543012;0413526", New CommandChaining_NK))
     End Sub
 
-    <TestMethod()> _
+    <TestMethod()>
     Public Sub TestVerifyTerminalPINUsingComparisonMethod()
         Dim PAN As String = "5044070000253211"
         Dim PINResult As String = TestTran(PAN.Substring(PAN.Length - 12 - 1, 12), New GenerateRandomPIN_JA)
@@ -555,7 +555,7 @@ Imports ThalesSim.Core.Message
         Assert.AreEqual("01", TestTran(cryptTPK + cryptPINBlock + Core.PIN.PINBlockFormat.FromPINBlockFormat(Core.PIN.PINBlockFormat.PIN_Block_Format.Diebold) + PAN.Substring(PAN.Length - 12 - 1, 12) + PIN2, New VerifyTerminalPinUsingComparisonMethod_BC))
     End Sub
 
-    <TestMethod()> _
+    <TestMethod()>
     Public Sub TestVerifyInterchangePINUsingComparisonMethod()
         Dim PAN As String = "5044070000253211"
         Dim PINResult As String = TestTran(PAN.Substring(PAN.Length - 12 - 1, 12), New GenerateRandomPIN_JA)
@@ -579,17 +579,17 @@ Imports ThalesSim.Core.Message
         Assert.AreEqual("01", TestTran(cryptZPK + cryptPINBlock + Core.PIN.PINBlockFormat.FromPINBlockFormat(Core.PIN.PINBlockFormat.PIN_Block_Format.Diebold) + PAN.Substring(PAN.Length - 12 - 1, 12) + PIN2, New VerifyInterchangePinUsingComparisonMethod_BE))
     End Sub
 
-    <TestMethod()> _
+    <TestMethod()>
     Public Sub TranslateBDKFromZMKToLMK()
         Assert.AreEqual("00U8E3D3E2FD5919657F05A1AA90D32A01408D7B4", TestTran("U1457FF6ADF6250C66C368416B4C9D3836A2C67C227784BC5D8508B6BED82ECB8;0U1", New TranslateBDKFromZMKToLMK_DW))
     End Sub
 
-    <TestMethod()> _
+    <TestMethod()>
     Public Sub TranslateBDKFromLMKToZMK()
         Assert.AreEqual("00X6A2C67C227784BC5D8508B6BED82ECB808D7B4", TestTran("U1457FF6ADF6250C66C368416B4C9D383U8E3D3E2FD5919657F05A1AA90D32A014;X01", New TranslateBDKFromLMKToZMK_DY))
     End Sub
 
-    <TestMethod()> _
+    <TestMethod()>
     Public Sub EncryptClearPIN()
         Dim clearPIN As String = "1234"
         Dim clearTPK As String = "D3DCC7EA9BCB755D254620B376B3D007"
@@ -597,7 +597,7 @@ Imports ThalesSim.Core.Message
         Dim cryptPVK As String = "UA8B1520E201412938388191885FFA50A"
         Dim PAN As String = "5044070000253211"
 
-        'Test for clear PIN padded with Fs (http://thalessim.codeplex.com/Thread/View.aspx?ThreadId=239725).
+        'Test for clear PIN padded with Fs (https://codeplexarchive.org/codeplex/projecttab/discussions/thalessim/239725).
         Assert.AreEqual("00" + "01234", TestTran("1234F" + PAN.Substring(3, 12), New EncryptClearPIN_BA))
 
         'Generate the "encrypted" PIN.

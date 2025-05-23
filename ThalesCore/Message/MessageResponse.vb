@@ -61,6 +61,20 @@ Namespace Message
             _data = s + _data
         End Sub
 
+        ''' <summary>
+        ''' Returns the message data without the error code.
+        ''' </summary>
+        ''' <remarks>
+        ''' Assumes that the error code has 2 characters.
+        ''' </remarks>
+        Public Function MessageDataWithoutErrorCode() As String
+            If _data.Length > 2 Then 'Assumindo que o error code tem 2 caracteres
+                Return _data.Substring(2)
+            Else
+                Return ""
+            End If
+        End Function
+
     End Class
 
 End Namespace

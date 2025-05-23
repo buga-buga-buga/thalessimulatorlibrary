@@ -45,6 +45,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_0E6A5F52F8A4DF17152D4B4071E2BAE9"
+        "OwnerKey" = "8:_90689CBB59B74434903770B7EC5FB634"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_125C86ABBD314683B45F276A3D8B6F49"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -525,12 +531,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_E75054C2663466FD6FBA8B66DABCE976"
-        "OwnerKey" = "8:_90689CBB59B74434903770B7EC5FB634"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_E809A2A60BAF4A10992AA65502118C60"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -562,7 +562,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_E75054C2663466FD6FBA8B66DABCE976"
+        "OwnerKey" = "8:_0E6A5F52F8A4DF17152D4B4071E2BAE9"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -592,16 +592,6 @@
             "ComponentsUrl" = "8:"
                 "Items"
                 {
-                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Net.Framework.3.5.SP1"
-                    {
-                    "Name" = "8:.NET Framework 3.5 SP1"
-                    "ProductCode" = "8:Microsoft.Net.Framework.3.5.SP1"
-                    }
-                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Windows.Installer.3.1"
-                    {
-                    "Name" = "8:Windows Installer 3.1"
-                    "ProductCode" = "8:Microsoft.Windows.Installer.3.1"
-                    }
                 }
             }
         }
@@ -662,7 +652,7 @@
                 {
                 "Name" = "8:.NET Framework"
                 "Message" = "8:[VSDNETMSG]"
-                "FrameworkVersion" = "8:.NETFramework,Version=v4.0"
+                "FrameworkVersion" = "8:v4.0"
                 "AllowLaterVersions" = "11:FALSE"
                 "InstallUrl" = "8:http://www.microsoft.com/en-us/download/details.aspx?id=17718"
                 }
@@ -768,6 +758,37 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_0E6A5F52F8A4DF17152D4B4071E2BAE9"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:ThalesCore, Version=0.9.6.0, Culture=neutral, PublicKeyToken=3b1da66c080a0b02, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_0E6A5F52F8A4DF17152D4B4071E2BAE9"
+                    {
+                    "Name" = "8:ThalesCore.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:ThalesCore.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_34E5D042E47843C09BC22C7FE4328E6E"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_125C86ABBD314683B45F276A3D8B6F49"
@@ -2350,37 +2371,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_E75054C2663466FD6FBA8B66DABCE976"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ThalesCore, Version=0.9.6.0, Culture=neutral, PublicKeyToken=3b1da66c080a0b02, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_E75054C2663466FD6FBA8B66DABCE976"
-                    {
-                    "Name" = "8:ThalesCore.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:ThalesCore.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_34E5D042E47843C09BC22C7FE4328E6E"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E809A2A60BAF4A10992AA65502118C60"
             {
             "SourcePath" = "8:..\\ThalesCore\\XMLDefs\\HostCommands\\TranslateTAKFromLMKToZMK_MG.xml"
@@ -2698,7 +2688,7 @@
                     "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_889FD43E24D24994A61C8AADCE18930C"
                     {
                     "Sequence" = "3:100"
-                    "DisplayName" = "8:Finished"
+                    "DisplayName" = "8:Concluído"
                     "UseDynamicProperties" = "11:TRUE"
                     "IsDependency" = "11:FALSE"
                     "SourcePath" = "8:<VsdDialogDir>\\VsdFinishedDlg.wid"
@@ -2742,7 +2732,7 @@
                     "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_60F609B918D0403EB080906C3B900D0E"
                     {
                     "Sequence" = "3:100"
-                    "DisplayName" = "8:Welcome"
+                    "DisplayName" = "8:Bem-vindo"
                     "UseDynamicProperties" = "11:TRUE"
                     "IsDependency" = "11:FALSE"
                     "SourcePath" = "8:<VsdDialogDir>\\VsdWelcomeDlg.wid"
@@ -2790,7 +2780,7 @@
                     "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_953E2998CCB74EF38A145B2810A533FB"
                     {
                     "Sequence" = "3:300"
-                    "DisplayName" = "8:Confirm Installation"
+                    "DisplayName" = "8:Confirmar Instalação"
                     "UseDynamicProperties" = "11:TRUE"
                     "IsDependency" = "11:FALSE"
                     "SourcePath" = "8:<VsdDialogDir>\\VsdConfirmDlg.wid"
@@ -2812,7 +2802,7 @@
                     "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_C8FC0DCFB30C47E680BEE34E40120631"
                     {
                     "Sequence" = "3:200"
-                    "DisplayName" = "8:Installation Folder"
+                    "DisplayName" = "8:Pasta de Instalação"
                     "UseDynamicProperties" = "11:TRUE"
                     "IsDependency" = "11:FALSE"
                     "SourcePath" = "8:<VsdDialogDir>\\VsdFolderDlg.wid"
@@ -2856,7 +2846,7 @@
                     "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_95606574D3CE4459896D70D58A59CAC8"
                     {
                     "Sequence" = "3:100"
-                    "DisplayName" = "8:Welcome"
+                    "DisplayName" = "8:Bem-vindo"
                     "UseDynamicProperties" = "11:TRUE"
                     "IsDependency" = "11:FALSE"
                     "SourcePath" = "8:<VsdDialogDir>\\VsdAdminWelcomeDlg.wid"
@@ -2904,7 +2894,7 @@
                     "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_BC60550BC88F4A53BBFA2EE228A4C4EF"
                     {
                     "Sequence" = "3:300"
-                    "DisplayName" = "8:Confirm Installation"
+                    "DisplayName" = "8:Confirmar Instalação"
                     "UseDynamicProperties" = "11:TRUE"
                     "IsDependency" = "11:FALSE"
                     "SourcePath" = "8:<VsdDialogDir>\\VsdAdminConfirmDlg.wid"
@@ -2926,7 +2916,7 @@
                     "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_DE03F2A6355741449E047C937BF5EF59"
                     {
                     "Sequence" = "3:200"
-                    "DisplayName" = "8:Installation Folder"
+                    "DisplayName" = "8:Pasta de Instalação"
                     "UseDynamicProperties" = "11:TRUE"
                     "IsDependency" = "11:FALSE"
                     "SourcePath" = "8:<VsdDialogDir>\\VsdAdminFolderDlg.wid"
@@ -2969,7 +2959,7 @@
                     "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_087CF697A40840F79D36E98A2A34B448"
                     {
                     "Sequence" = "3:100"
-                    "DisplayName" = "8:Progress"
+                    "DisplayName" = "8:Progresso"
                     "UseDynamicProperties" = "11:TRUE"
                     "IsDependency" = "11:FALSE"
                     "SourcePath" = "8:<VsdDialogDir>\\VsdProgressDlg.wid"
@@ -3013,7 +3003,7 @@
                     "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_591A55BDF44F4431AF31D81A05EF092F"
                     {
                     "Sequence" = "3:100"
-                    "DisplayName" = "8:Finished"
+                    "DisplayName" = "8:Concluído"
                     "UseDynamicProperties" = "11:TRUE"
                     "IsDependency" = "11:FALSE"
                     "SourcePath" = "8:<VsdDialogDir>\\VsdAdminFinishedDlg.wid"
@@ -3044,7 +3034,7 @@
                     "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_64327FF2102146B8A2E222B5EB1FA621"
                     {
                     "Sequence" = "3:100"
-                    "DisplayName" = "8:Progress"
+                    "DisplayName" = "8:Progresso"
                     "UseDynamicProperties" = "11:TRUE"
                     "IsDependency" = "11:FALSE"
                     "SourcePath" = "8:<VsdDialogDir>\\VsdAdminProgressDlg.wid"

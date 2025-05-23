@@ -208,7 +208,7 @@ Namespace HostCommands
                 Return mr
             End If
 
-            'This catered only for single-length key situations (see http://thalessim.codeplex.com/Thread/View.aspx?ThreadId=70958).
+            'This catered only for single-length key situations (see https://codeplexarchive.org/codeplex/projecttab/discussions/thalessim/70958).
             'clearTarget = TripleDES.TripleDESDecrypt(New HexKey(clearSource), _targetKEY)
 
             clearTarget = DecryptUnderZMK(clearSource, Utility.RemoveKeyType(_targetKEY), _targetKeyScheme, _atallaVariant) ' KeySchemeTable.KeyScheme.DoubleLengthKeyVariant)

@@ -17,6 +17,7 @@
 Imports System.Net.Sockets
 Imports ThalesSim.Core
 Imports ThalesSim.Core.Log
+Imports ThalesSim.Core.Resources
 
 ''' <summary>
 ''' Main Racal simulator driver.
@@ -118,6 +119,7 @@ Public Class ThalesMain
     Public Sub StartUp(ByVal XMLParameterFile As String)
 
         StartCrypto(XMLParameterFile)
+        Logger.MajorInfo(SayConfiguration())
         StartTCP()
 
     End Sub
@@ -140,14 +142,15 @@ Public Class ThalesMain
     ''' <returns></returns>
     ''' <remarks></remarks>
     Public Function SayConfiguration() As String
-        Return "Host command port: " + port.ToString + vbCrLf + _
-               "Console port: " + consolePort.ToString + vbCrLf + _
-               "Maximum connections: " + maxCons.ToString + vbCrLf + _
-               "Log level: " + Logger.CurrentLogLevel.ToString + vbCrLf + _
-               "Check LMK parity: " + CheckLMKParity.ToString + vbCrLf + _
-               "XML host command definitions: " + HostDefsDir + vbCrLf + _
-               "Use double-length ZMKs: " + DoubleLengthZMKs.ToString + vbCrLf + _
-               "Header length: " + HeaderLength.ToString + vbCrLf + _
+        Return "Host command port: " + port.ToString + vbCrLf +
+               "Console port: " + consolePort.ToString + vbCrLf +
+               "Maximum connections: " + maxCons.ToString + vbCrLf +
+               "Log level: " + Logger.CurrentLogLevel.ToString + vbCrLf +
+               "Check LMK parity: " + CheckLMKParity.ToString + vbCrLf +
+               "XML host command definitions: " + HostDefsDir + vbCrLf +
+               "Use double-length ZMKs: " + DoubleLengthZMKs.ToString + vbCrLf +
+               "Header length: " + HeaderLength.ToString + vbCrLf +
+               "Trailer: " + ExpectTrailers.ToString + vbCrLf +
                "EBCDIC: " + EBCDIC.ToString
     End Function
 
@@ -571,7 +574,7 @@ Public Class ThalesMain
                 AddHandler wClient.Disconnected, AddressOf WCDisconnected
                 AddHandler wClient.MessageArrived, AddressOf WCMessageArrived
 
-                Logger.MajorInfo("Client from " + wClient.ClientIP + " is connected")
+                Logger.MajorInfo("Cliente ta vindo de " + wClient.ClientIP + " is connected")
 
                 curCons += 1
 
@@ -621,32 +624,142 @@ Public Class ThalesMain
 
     'Console client data event
     Private Sub CWCMessageArrived(ByVal sender As TCP.WorkerClient, ByRef b() As Byte, ByVal len As Integer)
+        ' Dispara DataArrived para o console
+        Dim e As New TCPEventArgs
+        e.RemoteClient = sender.ClientIP
+        ReDim e.Data(len - 1)
+        Array.Copy(b, 0, e.Data, 0, len)
+        RaiseEvent DataArrived(Me, e)
 
-        '' Data for console commands do not all arrive at once. For most console commands, the console
-        '' prompts the user to enter information during a series of steps, then the command is executed
-        '' when all information has been gathered.
-        ''
-        '' This event handler is coded in order to reflect that. During the first message arrival, an
-        '' appropriate implementor of a console command is searched. If one is found, an object is
-        '' created and kept in the curMsg variable. This is used to accept keyed data from the console
-        '' and prompt the user for the next part of information to be entered. Once all information has
-        '' been entered, curMsg performs the processing and returns the result.
-        ''
-
-        'We're using a Message only to get a string back. No other relation to processing.
+        ' Forçando a verificacao/extração de trailer na mensagem.
         Dim msg As New ThalesSim.Core.Message.Message(b)
+
+        Dim trailer As String = ""
+        If ExpectTrailers Then
+            trailer = msg.GetTrailers()
+            If String.IsNullOrEmpty(trailer) Then
+                Logger.MajorError("Trailer não encontrado mas habilitado nas configurações.")
+            Else
+                Logger.MajorDebug("Trailer extraído: [" & trailer & "]")
+            End If
+        Else
+            Logger.MajorDebug("Parametro do trailer desligado.")
+        End If
 
         Try
             'Do we have a current command?
             If curMsg Is Nothing Then
                 'No, find the appropriate one.
-                Logger.MajorVerbose("Client: " + sender.ClientIP + vbCrLf + _
+                Logger.MajorDebug("Client: " + sender.ClientIP + vbCrLf +
                                     "Request: " + msg.MessageData())
-                Logger.MajorDebug("Searching for implementor of " + msg.MessageData + "...")
+                Logger.MajorDebug("Localizando o processador do comando " + msg.MessageData + "...")
+                Logger.MajorDebug("HeaderLength: " + HeaderLength.ToString())
+                Dim messageHeader As String = msg.GetSubstring(HeaderLength)
+                Logger.MajorDebug("Header: " + messageHeader)
+                msg.AdvanceIndex(HeaderLength)
+                Dim commandCode As String = msg.GetSubstring(2)
+                Logger.MajorDebug("CommandCode: " + commandCode)
+                msg.AdvanceIndex(2)
+
+                ' Primeiro tenta como comando de console
                 Dim CC As ConsoleCommands.ConsoleCommandClass = CCE.GetLoadedCommand(msg.MessageData)
+                Logger.MajorDebug("Localizando o processador do comando " + msg.MessageData + "...")
+
+                If CC Is Nothing Then
+                    ' Se não achou, tenta como comando de host
+                    Dim HC As ThalesSim.Core.HostCommands.CommandClass = CE.GetLoadedCommand(commandCode)
+
+                    If HC IsNot Nothing Then
+                        Logger.MajorDebug("Executando comando de host pelo console: " + commandCode)
+                        Dim o As ThalesSim.Core.HostCommands.AHostCommand
+                        o = CType(Activator.CreateInstance(HC.DeclaringType), HostCommands.AHostCommand)
+
+                        Logger.MajorDebug("Comando recebido: " & commandCode)
+                        Logger.MajorDebug("Classe do comando: " & HC.DeclaringType.FullName())
+                        Logger.MajorDebug("ResponseCode configurado para este comando: " & HC.ResponseCode)
+                        Logger.MajorDebug("ResponseCodeAfterIO configurado: " & HC.ResponseCodeAfterIO)
+
+                        Logger.MajorDebug("Executando AcceptMessage()...")
+                        o.AcceptMessage(msg)
+                        Logger.MajorDebug("XMLParseResult após AcceptMessage: " & o.XMLParseResult)
+
+                        Dim retMsg As ThalesSim.Core.Message.MessageResponse
+
+                        If o.XMLParseResult <> ErrorCodes.ER_00_NO_ERROR Then
+                            Logger.MajorDebug("Erro detectado, montando resposta de erro.")
+                            retMsg = New ThalesSim.Core.Message.MessageResponse
+                            retMsg.AddElement(o.XMLParseResult)
+                        Else
+                            Logger.MajorDebug("Executando ConstructResponse()...")
+                            retMsg = o.ConstructResponse()
+                        End If
+
+                        If o.XMLParseResult <> ErrorCodes.ER_00_NO_ERROR Then
+                            Logger.MajorDebug("Erro detectado, montando resposta de erro.")
+                            retMsg = New ThalesSim.Core.Message.MessageResponse
+                            retMsg.AddElement(o.XMLParseResult)
+                        Else
+                            Logger.MajorDebug("Executando ConstructResponse()...")
+                            retMsg = o.ConstructResponse()
+                        End If
+
+                        Logger.MajorDebug("Montando resposta final:")
+                        Logger.MajorDebug(" - Header: " & messageHeader)
+                        Logger.MajorDebug(" - Response Code: " & HC.ResponseCode)
+                        Logger.MajorDebug(" - Error Code: " & o.XMLParseResult)
+                        Logger.MajorDebug(" - Data: " & retMsg.MessageDataWithoutErrorCode())
+                        Logger.MajorDebug(" - Trailer: " & trailer)
+
+                        retMsg.AddElementFront(HC.ResponseCode)
+                        retMsg.AddElementFront(messageHeader)
+                        retMsg.AddElement(trailer)
+
+                        Logger.MajorVerbose("Resposta final montada: " & retMsg.MessageData())
+                        Dim resposta As String = retMsg.MessageData() + vbCrLf
+                        sender.send(resposta)
+
+                        ' Dispara DataSent para o console
+                        Dim eSent As New TCPEventArgs
+                        eSent.RemoteClient = sender.ClientIP
+                        eSent.Data = Utility.GetBytesFromString(resposta)
+                        RaiseEvent DataSent(Me, eSent)
+
+                        o.Terminate()
+                        curMsg = Nothing
+                        Exit Sub
+                    End If
+                End If
+
                 If CC Is Nothing Then
                     Logger.MajorError("No implementor for " + msg.MessageData + ".")
-                    sender.send("Command not found" + vbCrLf)
+
+                    ' Garante que commandCode, messageHeader e trailer estão definidos
+                    ' (já estão definidos acima no método, mas garanta que não estão vazios)
+                    Dim respCode As String
+                    If commandCode.Length = 2 Then
+                        Dim c1 As Char = commandCode(0)
+                        Dim c2 As Char = commandCode(1)
+                        respCode = c1 & Chr(Asc(c2) + 1)
+                    Else
+                        respCode = commandCode
+                    End If
+
+                    ' Monta resposta: header + respCode + erro 67 + trailer
+                    Dim retMsgLic As New ThalesSim.Core.Message.MessageResponse
+                    retMsgLic.AddElementFront(ErrorCodes.ER_67_COMMAND_NOT_LICENSED)
+                    retMsgLic.AddElementFront(respCode)
+                    retMsgLic.AddElementFront(messageHeader)
+                    If trailer <> "" Then
+                        retMsgLic.AddElement(trailer)
+                    End If
+
+                    Dim resposta As String = retMsgLic.MessageData() + vbCrLf
+                    sender.send(resposta)
+                    ' Dispara DataSent para o console
+                    Dim eSent As New TCPEventArgs
+                    eSent.RemoteClient = sender.ClientIP
+                    eSent.Data = Utility.GetBytesFromString(resposta)
+                    RaiseEvent DataSent(Me, eSent)
                     Exit Sub
                 End If
 
@@ -666,11 +779,25 @@ Public Class ThalesMain
 
                 'If it returns some string and it signaled a finish, we're done with the command.
                 If returnMsg IsNot Nothing AndAlso curMsg.CommandFinished Then
-                    sender.send(returnMsg + vbCrLf)
+                    Logger.MajorDebug("002 - Retornando essa string aqui :" + returnMsg)
+                    Dim resposta As String = returnMsg + vbCrLf
+                    sender.send(resposta)
+                    ' Dispara DataSent para o console
+                    Dim eSent As New TCPEventArgs
+                    eSent.RemoteClient = sender.ClientIP
+                    eSent.Data = Utility.GetBytesFromString(resposta)
+                    RaiseEvent DataSent(Me, eSent)
                     curMsg = Nothing
                 Else
                     'Else, let the command send the next prompt to the console.
-                    sender.send(curMsg.GetClientMessage())
+                    Logger.MajorDebug("003 - Retornando :" + curMsg.GetClientMessage())
+                    Dim resposta As String = curMsg.GetClientMessage()
+                    sender.send(resposta)
+                    ' Dispara DataSent para o console
+                    Dim eSent As New TCPEventArgs
+                    eSent.RemoteClient = sender.ClientIP
+                    eSent.Data = Utility.GetBytesFromString(resposta)
+                    RaiseEvent DataSent(Me, eSent)
                 End If
                 Exit Sub
             End If
@@ -680,14 +807,34 @@ Public Class ThalesMain
             'of them, just run the ProcessMessage method and return the result.
             If curMsg.IsNoinputCommand Then
                 Try
-                    sender.send(curMsg.ProcessMessage + vbCrLf)
+                    Logger.MajorDebug("004 - Retornando :" + curMsg.ProcessMessage)
+                    Dim resposta As String = curMsg.ProcessMessage + vbCrLf
+                    sender.send(resposta)
+                    ' Dispara DataSent para o console
+                    Dim eSent As New TCPEventArgs
+                    eSent.RemoteClient = sender.ClientIP
+                    eSent.Data = Utility.GetBytesFromString(resposta)
+                    RaiseEvent DataSent(Me, eSent)
                 Catch ex As Exception
-                    sender.send(ex.Message)
+                    Dim resposta As String = ex.Message
+                    sender.send(resposta)
+                    ' Dispara DataSent para o console
+                    Dim eSent As New TCPEventArgs
+                    eSent.RemoteClient = sender.ClientIP
+                    eSent.Data = Utility.GetBytesFromString(resposta)
+                    RaiseEvent DataSent(Me, eSent)
                 End Try
                 curMsg = Nothing
             Else
                 'Else, let the command send the first prompt to the console.
-                sender.send(curMsg.GetClientMessage())
+                Logger.MajorDebug("005 - Retornando :" + curMsg.GetClientMessage())
+                Dim resposta As String = curMsg.GetClientMessage()
+                sender.send(resposta)
+                ' Dispara DataSent para o console
+                Dim eSent As New TCPEventArgs
+                eSent.RemoteClient = sender.ClientIP
+                eSent.Data = Utility.GetBytesFromString(resposta)
+                RaiseEvent DataSent(Me, eSent)
             End If
 
         Catch ex As Exception
@@ -716,6 +863,7 @@ Public Class ThalesMain
         e.RemoteClient = sender.ClientIP
         ReDim e.Data(len - 1)
         Array.Copy(b, 0, e.Data, 0, len)
+        Debug.WriteLine("RaiseEvent DataArrived chamado!")
         RaiseEvent DataArrived(Me, e)
 
         Dim msg As New ThalesSim.Core.Message.Message(b)
@@ -739,104 +887,151 @@ Public Class ThalesMain
 
             RaiseEvent CommandCalled(Me, commandCode)
 
-            Logger.MajorDebug("Searching for implementor of " + commandCode + "...")
+            Logger.MajorDebug("Procurando for implementor of " + commandCode + "...")
             Dim CC As ThalesSim.Core.HostCommands.CommandClass = CE.GetLoadedCommand(commandCode)
 
             If CC Is Nothing Then
-                Logger.MajorError("No implementor for " + commandCode + "." + vbCrLf + _
-                                  "Disconnecting client.")
+                Logger.MajorError("No implementor for " + commandCode + ".")
+
+                ' Incrementa a última letra do comando (ex: OI -> OJ)
+                Dim respCode As String
+                If commandCode.Length = 2 Then
+                    Dim c1 As Char = commandCode(0)
+                    Dim c2 As Char = commandCode(1)
+                    respCode = c1 & Chr(Asc(c2) + 1)
+                Else
+                    respCode = commandCode
+                End If
+
+                ' Extrai trailer se necessário
+                Dim trailingChars As String = ""
+                If ExpectTrailers Then
+                    trailingChars = msg.GetTrailers()
+                End If
+
+                ' Monta resposta: header + respCode + erro 67 + trailer
+                Dim retMsgB As New ThalesSim.Core.Message.MessageResponse
+                retMsgB.AddElementFront(ErrorCodes.ER_67_COMMAND_NOT_LICENSED)
+                retMsgB.AddElementFront(respCode)
+                retMsgB.AddElementFront(messageHeader)
+                retMsgB.AddElement(trailingChars)
+
+                sender.send(retMsgB.MessageData())
+                RaiseDataSentEvent(sender.ClientIP, retMsgB)
                 sender.TermClient()
-            Else
-                Logger.MajorDebug("Found implementor " + CC.DeclaringType.FullName() + ", instantiating...")
-                Dim o As ThalesSim.Core.HostCommands.AHostCommand
-                o = CType(Activator.CreateInstance(CC.DeclaringType), HostCommands.AHostCommand)
+                Exit Sub
+            End If
 
-                Dim retMsg As ThalesSim.Core.Message.MessageResponse
-                Dim retMsgAfterIO As ThalesSim.Core.Message.MessageResponse = Nothing
+            Logger.MajorDebug("Found implementor " + CC.DeclaringType.FullName() + ", instantiating...")
+            Dim o As ThalesSim.Core.HostCommands.AHostCommand
+            o = CType(Activator.CreateInstance(CC.DeclaringType), HostCommands.AHostCommand)
 
-                Try
-                    Dim trailingChars As String = ""
-                    If ExpectTrailers Then
-                        trailingChars = msg.GetTrailers()
+            Dim retMsg As ThalesSim.Core.Message.MessageResponse
+            Dim retMsgAfterIO As ThalesSim.Core.Message.MessageResponse = Nothing
+
+            Try
+                Dim trailingChars As String = ""
+                If ExpectTrailers Then
+                    trailingChars = msg.GetTrailers()
+                    Logger.MajorDebug("Trailer extraído: [" & trailingChars & "]")
+                End If
+
+                If CheckLMKParity = False OrElse Cryptography.LMK.LMKStorage.CheckLMKStorage() = True Then
+                    Logger.MinorInfo("=== [" + commandCode + "], starts " + Utility.getTimeMMHHSSmmmm + " =======")
+
+                    Logger.MajorDebug("Comando recebido: " & commandCode)
+                    Logger.MajorDebug("Classe do comando: " & CC.DeclaringType.FullName())
+                    Logger.MajorDebug("ResponseCode configurado para este comando: " & CC.ResponseCode)
+                    Logger.MajorDebug("ResponseCodeAfterIO configurado: " & CC.ResponseCodeAfterIO)
+
+                    Logger.MajorDebug("Executando AcceptMessage()...")
+                    o.AcceptMessage(msg)
+                    Logger.MajorDebug("XMLParseResult após AcceptMessage: " & o.XMLParseResult)
+
+                    If o.XMLParseResult <> ErrorCodes.ER_00_NO_ERROR Then
+                        Logger.MajorDebug("Erro detectado, montando resposta de erro.")
+                        retMsg = New ThalesSim.Core.Message.MessageResponse
+                        retMsg.AddElement(o.XMLParseResult)
+                    Else
+                        Logger.MajorDebug("Executando ConstructResponse()...")
+                        retMsg = o.ConstructResponse()
                     End If
 
-                    If CheckLMKParity = False OrElse Cryptography.LMK.LMKStorage.CheckLMKStorage() = True Then
-                        Logger.MinorInfo("=== [" + commandCode + "], starts " + Utility.getTimeMMHHSSmmmm + " =======")
-
-                        Logger.MajorDebug("Calling AcceptMessage()...")
-                        o.AcceptMessage(msg)
-
-                        Logger.MinorVerbose(o.DumpFields())
-
-                        If o.XMLParseResult <> ErrorCodes.ER_00_NO_ERROR Then
-                            Logger.MajorDebug("Error condition encountered during message parsing.")
-                            Logger.MajorDebug(String.Format("Error code {0} will be returned without calling ConstructResponse().", o.XMLParseResult))
-                            retMsg = New Core.Message.MessageResponse
-                            retMsg.AddElement(o.XMLParseResult)
-                        Else
-                            Logger.MajorDebug("Calling ConstructResponse()...")
-                            retMsg = o.ConstructResponse()
-                            Logger.MajorDebug("Calling ConstructResponseAfterOperationComplete()...")
-                            retMsgAfterIO = o.ConstructResponseAfterOperationComplete()
-                        End If
-
-                        Logger.MajorDebug("Attaching header/response code to response...")
-                        retMsg.AddElementFront(CC.ResponseCode)
-                        retMsg.AddElementFront(messageHeader)
-                        retMsg.AddElement(trailingChars)
-
-                        Logger.MajorVerbose("Sending: " + retMsg.MessageData())
-                        sender.send(retMsg.MessageData())
-
-                        RaiseDataSentEvent(sender.ClientIP, retMsg)
-
-                        If retMsgAfterIO IsNot Nothing Then
-                            Logger.MajorDebug("Attaching header/response code to response after I/O...")
-                            retMsgAfterIO.AddElementFront(CC.ResponseCodeAfterIO)
-                            retMsgAfterIO.AddElementFront(messageHeader)
-
-                            'With "Generate and print" type of commands, we get another message after I/O.
-                            'If we have end delimiter and trailer, only the end delimiter is added at the
-                            'end of the last message.
-                            If ExpectTrailers Then
-                                retMsgAfterIO.AddElement(Utility.GetStringFromBytes(New Byte() {&H19}))
-                            End If
-
-                            Logger.MajorVerbose("Sending: " + retMsgAfterIO.MessageData())
-                            sender.send(retMsgAfterIO.MessageData())
-
-                            RaiseDataSentEvent(sender.ClientIP, retMsgAfterIO)
-                        End If
-
-                        Logger.MinorInfo("=== [" + commandCode + "],   ends " + Utility.getTimeMMHHSSmmmm + " =======" + vbCrLf)
+                    If o.XMLParseResult <> ErrorCodes.ER_00_NO_ERROR Then
+                        Logger.MajorDebug("Erro detectado, montando resposta de erro.")
+                        retMsg = New ThalesSim.Core.Message.MessageResponse
+                        retMsg.AddElement(o.XMLParseResult)
                     Else
-                        Logger.MajorError("LMK parity error")
-                        retMsg = New Message.MessageResponse
-                        retMsg.AddElementFront(Core.ErrorCodes.ER_13_MASTER_KEY_PARITY_ERROR)
-                        retMsg.AddElementFront(CC.ResponseCode)
-                        retMsg.AddElementFront(messageHeader)
-                        retMsg.AddElement(trailingChars)
-                        sender.send(retMsg.MessageData())
+                        Logger.MajorDebug("Executando ConstructResponse()...")
+                        retMsg = o.ConstructResponse()
+                    End If
+
+                    Logger.MajorDebug("Montando resposta final:")
+                    Logger.MajorDebug(" - ResponseCode: " & CC.ResponseCode)
+                    Logger.MajorDebug(" - Header: " & messageHeader)
+
+
+                    Logger.MajorDebug("Montando resposta final:")
+                    Logger.MajorDebug(" - Header: " & messageHeader)
+                    Logger.MajorDebug(" - Response Code: " & CC.ResponseCode)
+                    Logger.MajorDebug(" - Error Code: " & o.XMLParseResult)
+                    Logger.MajorDebug(" - Data: " & retMsg.MessageDataWithoutErrorCode())
+                    Logger.MajorDebug(" - Trailer: " & trailingChars)
+
+                    retMsg.AddElementFront(CC.ResponseCode)
+                    retMsg.AddElementFront(messageHeader)
+                    retMsg.AddElement(trailingChars)
+
+                    Logger.MajorVerbose("Resposta final montada: " & retMsg.MessageData())
+                    sender.send(retMsg.MessageData())
+
+                    RaiseDataSentEvent(sender.ClientIP, retMsg)
+
+                    If retMsgAfterIO IsNot Nothing Then
+                        Logger.MajorDebug("Attaching header/response code to response after I/O...")
+                        retMsgAfterIO.AddElementFront(CC.ResponseCodeAfterIO)
+                        retMsgAfterIO.AddElementFront(messageHeader)
+
+                        'With "Generate and print" type of commands, we get another message after I/O.
+                        'If we have end delimiter and trailer, only the end delimiter is added at the
+                        'end of the last message.
+                        If ExpectTrailers Then
+                            retMsgAfterIO.AddElement(Utility.GetStringFromBytes(New Byte() {&H19}))
+                        End If
+
+                        Logger.MajorVerbose("Sending: " + retMsgAfterIO.MessageData())
+                        sender.send(retMsgAfterIO.MessageData())
 
                         RaiseDataSentEvent(sender.ClientIP, retMsgAfterIO)
                     End If
 
-                Catch ex As Exception
-                    Logger.MajorError("Exception while processing message" + vbCrLf + ex.ToString())
-                    Logger.MajorError("Disconnecting client.")
-                    sender.TermClient()
-                End Try
+                    Logger.MinorInfo("=== [" + commandCode + "],   ends " + Utility.getTimeMMHHSSmmmm + " =======" + vbCrLf)
+                Else
+                    Logger.MajorError("LMK parity error")
+                    retMsg = New Message.MessageResponse
+                    retMsg.AddElementFront(Core.ErrorCodes.ER_13_MASTER_KEY_PARITY_ERROR)
+                    retMsg.AddElementFront(CC.ResponseCode)
+                    retMsg.AddElementFront(messageHeader)
+                    retMsg.AddElement(trailingChars)
+                    sender.send(retMsg.MessageData())
 
-                If o.PrinterData <> "" Then
-                    RaiseEvent PrinterData(Me, o.PrinterData)
+                    RaiseDataSentEvent(sender.ClientIP, retMsgAfterIO)
                 End If
 
-                Logger.MajorDebug("Calling Terminate()...")
-                o.Terminate()
-                Logger.MajorDebug("Implementor to Nothing")
-                o = Nothing
+            Catch ex As Exception
+                Logger.MajorError("Exception while processing message" + vbCrLf + ex.ToString())
+                Logger.MajorError("Disconnecting client.")
+                sender.TermClient()
+            End Try
 
+            If o.PrinterData <> "" Then
+                RaiseEvent PrinterData(Me, o.PrinterData)
             End If
+
+            Logger.MajorDebug("Calling Terminate()...")
+            o.Terminate()
+            Logger.MajorDebug("Implementor to Nothing")
+            o = Nothing
 
         Catch ex As Exception
             Logger.MajorError("Exception while parsing message or creating implementor instance" + vbCrLf + ex.ToString())
@@ -850,6 +1045,7 @@ Public Class ThalesMain
         Dim e As New TCPEventArgs
         e.RemoteClient = remoteClient
         e.Data = Utility.GetBytesFromString(msg.MessageData)
+        Debug.WriteLine("RaiseEvent DataSent chamado!")
         RaiseEvent DataSent(Me, e)
     End Sub
 

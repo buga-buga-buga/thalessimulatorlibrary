@@ -79,11 +79,11 @@ Namespace HostCommands.BuildIn
             Dim LMKKeyPair As LMKPairs.LMKPair, var As String = ""
 
             If _keyTypeCode = "FF" Then
-                'Per http://thalessim.codeplex.com/workitem/8145, need to be more careful
+                'Per https://codeplexarchive.org/codeplex/projecttab/issues/thalessim/8145, need to be more careful
                 'how var is passed by reference.
                 If Me.ValidateKeyTypeCode(_keyType, LMKKeyPair, var, mr) = False Then Return mr
             Else
-                'http://thalessim.codeplex.com/workitem/8145
+                'https://codeplexarchive.org/codeplex/projecttab/issues/thalessim/8145
                 Dim intVar As Integer
                 Core.LMKPairs.LMKTypeCodeToLMKPair(_keyTypeCode, LMKKeyPair, intVar)
                 var = intVar.ToString

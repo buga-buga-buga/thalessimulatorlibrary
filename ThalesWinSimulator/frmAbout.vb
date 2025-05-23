@@ -17,7 +17,7 @@
 Public Class frmAbout
 
     Private Sub frmAbout_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
-        lnk.Links.Add(0, lnk.Text.Length, "http://thalessim.codeplex.com/")
+        lnk.Links.Add(0, lnk.Text.Length, "https://github.com/nickntg/thalessimulatorlibrary/")
     End Sub
 
     Private Sub lnk_LinkClicked(ByVal sender As System.Object, ByVal e As System.Windows.Forms.LinkLabelLinkClickedEventArgs) Handles lnk.LinkClicked

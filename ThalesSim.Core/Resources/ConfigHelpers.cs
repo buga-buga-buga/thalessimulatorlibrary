@@ -14,6 +14,7 @@
  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+using System;
 using ThalesSim.Core.Properties;
 
 namespace ThalesSim.Core.Resources
@@ -68,7 +69,8 @@ namespace ThalesSim.Core.Resources
         /// </summary>
         public static void SetSingleLengthZmk()
         {
-            Settings.Default.DoubleLengthZMKs = false;
+            // Use a method to update the setting instead of direct assignment
+            UpdateSetting(nameof(Settings.Default.DoubleLengthZMKs), false);
         }
 
         /// <summary>
@@ -76,7 +78,8 @@ namespace ThalesSim.Core.Resources
         /// </summary>
         public static void SetDoubleLengthZmk()
         {
-            Settings.Default.DoubleLengthZMKs = true;            
+            // Use a method to update the setting instead of direct assignment
+            UpdateSetting(nameof(Settings.Default.DoubleLengthZMKs), true);            
         }
 
         /// <summary>
@@ -95,6 +98,24 @@ namespace ThalesSim.Core.Resources
         public static void SetLegacyMode (bool flag)
         {
             _legagyMode = flag;
+        }
+
+        /// <summary>
+        /// Updates a setting value dynamically.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to update.</param>
+        /// <param name="value">The value to set.</param>
+        private static void UpdateSetting(string propertyName, object value)
+        {
+            var property = typeof(Settings).GetProperty(propertyName);
+            if (property != null && property.CanWrite)
+            {
+                property.SetValue(Settings.Default, value);
+            }
+            else
+            {
+                throw new InvalidOperationException($"The property '{propertyName}' is read-only or does not exist.");
+            }
         }
     }
 }

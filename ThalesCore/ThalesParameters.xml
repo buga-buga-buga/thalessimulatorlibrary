@@ -50,7 +50,7 @@
     
     <!-- Set to True to force the simulator to expect and ending trailer
          equal to 0x19 and a trailing header. -->
-    <ExpectTrailers value="False" />
+    <ExpectTrailers value="True" />
 
     <!-- Indicates the length of the message header. -->
     <HeaderLength value="4" />
