@@ -356,9 +356,7 @@
     <Content Include="XMLDefs\HostCommands\ImportKey_A6.xml" />
     <Content Include="XMLDefs\HostCommands\MultiFormatCVK.xml" />
     <Content Include="XMLDefs\HostCommands\ExportKey_A8.xml" />
-    <Content Include="XMLDefs\HostCommands\EchoTest_B2.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Content Include="XMLDefs\HostCommands\EchoTest_B2.xml" />
     <Content Include="XMLDefs\HostCommands\FormZMKFromTwoToNineComponents_GY.xml" />
     <Content Include="XMLDefs\HostCommands\KeyScheme.xml" />
     <Content Include="XMLDefs\HostCommands\LargeMultiFormatKey.xml" />

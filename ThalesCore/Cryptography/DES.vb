@@ -38,30 +38,29 @@ Namespace Cryptography
 
             Try
                 Dim outStream As MemoryStream
-                Dim desProvider As New DESCryptoServiceProvider
+                Dim desProvider As SymmetricAlgorithm = System.Security.Cryptography.DES.Create()
                 Dim csMyCryptoStream As CryptoStream
                 Dim bNullVector() As Byte = {0, 0, 0, 0, 0, 0, 0, 0}
 
                 ReDim bResult(7)
 
-                If DESCryptoServiceProvider.IsWeakKey(bKey) Then
+                ' Corrija o acesso ao membro compartilhado:
+                If System.Security.Cryptography.DESCryptoServiceProvider.IsWeakKey(bKey) Then
                     Log.Logger.MajorWarning("***DES Encrypt with weak key***")
                 End If
-
 
                 'NEW STUFF TO GET AROUND WEAK KEYS vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
                 Dim DESalg As System.Security.Cryptography.DES
                 Dim desTransform As ICryptoTransform
                 Dim mi As Reflection.MethodInfo
 
+                ' Substitua DES.Create por System.Security.Cryptography.DES.Create
                 DESalg = System.Security.Cryptography.DES.Create
 
-                desProvider = CType(DESalg, DESCryptoServiceProvider)
+                desProvider = CType(DESalg, SymmetricAlgorithm)
                 desProvider.Mode = CipherMode.ECB
-                'desProvider.Key = bKey
                 desProvider.IV = bNullVector
                 desProvider.Padding = PaddingMode.None
-                'Note the last param here indicates mode of operation 1 = decypt 0 = encrypt
                 Dim Par As Object() = {bKey, desProvider.Mode, bNullVector, desProvider.FeedbackSize, 0}
 
                 mi = desProvider.GetType().GetMethod("_NewEncryptor", Reflection.BindingFlags.NonPublic Or Reflection.BindingFlags.Instance)
@@ -98,13 +97,14 @@ Namespace Cryptography
 
             Try
                 Dim outStream As MemoryStream
-                Dim desProvider As New DESCryptoServiceProvider
+                Dim desProvider As SymmetricAlgorithm = System.Security.Cryptography.DES.Create()
                 Dim csMyCryptoStream As CryptoStream
                 Dim bNullVector() As Byte = {0, 0, 0, 0, 0, 0, 0, 0}
 
                 ReDim bResult(7)
 
-                If DESCryptoServiceProvider.IsWeakKey(bKey) Then
+                ' Corrija o acesso ao membro compartilhado:
+                If System.Security.Cryptography.DESCryptoServiceProvider.IsWeakKey(bKey) Then
                     Log.Logger.MajorWarning("***DES Decrypt with weak key***")
                 End If
                 'NEW STUFF TO GET AROUND WEAK KEYS vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
@@ -112,14 +112,13 @@ Namespace Cryptography
                 Dim desTransform As ICryptoTransform
                 Dim mi As Reflection.MethodInfo
 
+                ' Substitua DES.Create por System.Security.Cryptography.DES.Create
                 DESalg = System.Security.Cryptography.DES.Create
 
-                desProvider = CType(DESalg, DESCryptoServiceProvider)
+                desProvider = CType(DESalg, SymmetricAlgorithm)
                 desProvider.Mode = CipherMode.ECB
-                'desProvider.Key = bKey
                 desProvider.IV = bNullVector
                 desProvider.Padding = PaddingMode.None
-                'Note the last param here indicates mode of operation 1 = decypt 0 = encrypt
                 Dim Par As Object() = {bKey, desProvider.Mode, bNullVector, desProvider.FeedbackSize, 1}
 
                 mi = desProvider.GetType().GetMethod("_NewEncryptor", Reflection.BindingFlags.NonPublic Or Reflection.BindingFlags.Instance)

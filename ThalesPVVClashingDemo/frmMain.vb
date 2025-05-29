@@ -1,11 +1,16 @@
 ﻿Imports System.Windows.Forms
 Imports ThalesSim
 Imports ThalesSim.Core
+Imports System.Text
 
 Public Class frmMain
 
     Dim WithEvents thales As TCP.WorkerClient
     Dim thalesData As String = ""
+
+    Private Sub frmMain_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
+        Encoding.RegisterProvider(CodePagesEncodingProvider.Instance)
+    End Sub
 
     Private Sub frmMain_FormClosing(ByVal sender As Object, ByVal e As System.Windows.Forms.FormClosingEventArgs) Handles Me.FormClosing
         My.Settings.PIN = txtPIN.Text
@@ -20,6 +25,13 @@ Public Class frmMain
 
     Private Sub cmdFindAllPINs_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmdFindAllPINs.Click
         Me.Enabled = False
+
+        ' Validação do comprimento do PAN antes de usar Substring
+        If txtPAN.Text.Length < 13 Then
+            MessageBox.Show("O campo PAN deve conter pelo menos 13 dígitos.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Me.Enabled = True
+            Exit Sub
+        End If
 
         Try
             thales = New TCP.WorkerClient(New Net.Sockets.TcpClient(txtIPAddress.Text, Convert.ToInt32(txtPort.Text)))
@@ -44,7 +56,9 @@ Public Class frmMain
 
                 Dim PVV As String = reply.Substring(8, 4)
                 doLog("PVV is " + PVV)
-                doLog("Running PIN verification for all PINs and this PVV...")
+                doLog("Running PIN verification for all PINs and this PVV, wait it will last a little bit...")
+
+                ' Loop principal que executa 9999 vezes pra achar todos os possiveis
                 For i As Integer = 0 To 9999
                     PB = Cryptography.TripleDES.TripleDESEncrypt(key, i.ToString.PadLeft(4, "0"c) + New String("F"c, 12))
                     reply = SendFunctionCommand("1234DC" + txtCryptTPK.Text + txtCryptPVK.Text + PB + "03" + acctNumber + "1" + PVV)
